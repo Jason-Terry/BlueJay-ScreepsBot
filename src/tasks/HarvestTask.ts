@@ -1,0 +1,1 @@
+// Class that contains creep logic for Harvesting energy from source.

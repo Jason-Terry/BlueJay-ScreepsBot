@@ -1,4 +1,7 @@
-class Commander {
+import { CreepFactory } from "creeps/CreepFactory";
+import { Delegator } from "tasks/Delegator";
+
+export class Commander {
 
     private intelLevel: string; // INF > DEB > TRC
     private alertLevel: number; // 0 > 1 > 2
@@ -32,6 +35,22 @@ class Commander {
             } 
          } 
     }
-}
 
-export default Commander;
+    public static runTick() {
+        // Update / Check Active Creeps
+        // CreepFactory.updateStatus();
+        
+        // Conduct Rollcall to update Empire Population
+
+
+        // Create creeps if lacking population
+        CreepFactory.rollcall();
+        // CreepFactory.create();
+
+        // Preform Tick Actions
+        Delegator.delegate();
+
+        // Handle task logic.
+
+    }
+}

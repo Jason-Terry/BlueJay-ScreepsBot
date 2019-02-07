@@ -1,5 +1,6 @@
 import { ErrorMapper } from "utils/ErrorMapper";
-import { CreepFactory } from "creeps/CreepFactory";
+import { Commander } from "utils/Commander";
+
 // import Commander from "utils/Commander";
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -10,10 +11,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // TICK SETUP
 
   // SETUP LOGS
-  console.log('Hello Screeps');
+  console.log('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
   console.log(`Current game tick is ${Game.time}.`);
 
-  CreepFactory.checkLimits();
+  Commander.runTick();
   
   // Automatically delete memory of missing creeps
   for (const name in Memory.creeps) {

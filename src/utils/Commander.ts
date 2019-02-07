@@ -45,7 +45,7 @@ export class Commander {
 
         // Create creeps if lacking population
         CreepFactory.rollcall();
-        // CreepFactory.create();
+        CreepFactory.create();
 
         // Preform Tick Actions
         Delegator.delegate();

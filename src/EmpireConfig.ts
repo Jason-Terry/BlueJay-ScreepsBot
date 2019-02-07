@@ -1,5 +1,6 @@
 export class EmpireConfig {
 
+    // Config Objs
     public static readonly PopLimits = { 
         "TOTAL": 5, 
         "HRV": 3, 
@@ -19,5 +20,4 @@ export class EmpireConfig {
             this.WRK = 0;
         }
     }
-
 }

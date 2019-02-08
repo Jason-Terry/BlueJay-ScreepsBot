@@ -9,6 +9,7 @@ export class UpgradeTask {
                 }
             }
         } else {
+            creep.memory.prevTask = creep.memory.currTask;
             creep.memory.currTask = "RFL";
         }        
     }

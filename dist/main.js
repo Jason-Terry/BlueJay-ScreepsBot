@@ -2497,6 +2497,7 @@ class UpgradeTask {
             }
         }
         else {
+            creep.memory.prevTask = creep.memory.currTask;
             creep.memory.currTask = "RFL";
         }
     }
@@ -2505,9 +2506,11 @@ class UpgradeTask {
 class RefillEngTask {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
-        creep.room.storage;
         // If full, get back to work
         if (cargoTotal == creep.carryCapacity) {
+            // TRC log
+            console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity);
+            console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
             creep.memory.currTask = creep.memory.prevTask;
             creep.memory.prevTask = "NUL";
         }

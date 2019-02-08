@@ -1,5 +1,17 @@
 export class EmpireConfig {
 
+    // Mem presets
+    public static HRV_ROLE = {
+        task: "HRV"
+    }
+
+    public static UPG_ROLE = {
+        task: "UPG"
+    }
+
+    public static WRK_ROLE = {
+        task: "WRK"
+    }
     // Config Objs
     public static readonly PopLimits = { 
         "TOTAL": 5, 

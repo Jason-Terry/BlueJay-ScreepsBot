@@ -2,6 +2,7 @@ import { CreepBodies } from "./CreepBodies"
 import { EmpireConfig } from "EmpireConfig";
 import { CreepNameGen } from "utils/CreepNameGen";
 
+    // MEM Presets
 
 
 export class CreepFactory {
@@ -43,10 +44,7 @@ export class CreepFactory {
         // HRV -> UPG -> WRK
         console.log("HRV Current: " + EmpireConfig.PopCurrent.HRV + " | Limit: " + EmpireConfig.PopLimits.HRV);
         if (EmpireConfig.PopCurrent.HRV < EmpireConfig.PopLimits.HRV) {
-            let preset = new HRVRolePreset;
-            console.log(JSON.stringify(preset))
-            console.log(preset.memory.task);
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), preset);
+            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), EmpireConfig.HRV_ROLE);
         } else {
             console.log("HRV at Capacity!");
         }

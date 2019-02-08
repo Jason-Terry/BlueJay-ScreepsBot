@@ -8,15 +8,15 @@ export class Delegator {
         for (let key in Game.creeps) {
             let creep = Game.creeps[key];            
             // Switch based on task set, if no task find one.
-            switch (creep.memory.role) {
+            switch (creep.memory.task) {
                 case "HRV":
-                    WorkerTask.run(creep)    
-                    break;
-                case "UPG":
                     HarvestTask.run(creep)    
                     break;
-                case "WRK":
+                case "UPG":
                     UpgradeTask.run(creep)    
+                    break;
+                case "WRK":
+                    WorkerTask.run(creep)    
                     break;
                 case "HUA":
                     // WorkerTask.run(creep)    

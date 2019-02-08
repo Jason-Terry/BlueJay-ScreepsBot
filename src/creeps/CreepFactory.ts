@@ -2,9 +2,6 @@ import { CreepBodies } from "./CreepBodies"
 import { EmpireConfig } from "EmpireConfig";
 import { CreepNameGen } from "utils/CreepNameGen";
 
-    // MEM Presets
-
-
 export class CreepFactory {
 
     public static JobList = [];
@@ -42,24 +39,41 @@ export class CreepFactory {
 
     public static create() {
         // HRV -> UPG -> WRK
-        console.log("HRV Current: " + EmpireConfig.PopCurrent.HRV + " | Limit: " + EmpireConfig.PopLimits.HRV);
-        if (EmpireConfig.PopCurrent.HRV < EmpireConfig.PopLimits.HRV) {
+        let working = false;
+        console.log("Checking if working..")
+        if(Game.spawns['Spawn1'].spawning) {
+            console.log("Currently working.. Setting flag...")
+            working = true;
+        }
+
+        console.log("Creation Check: HRV")
+        console.log(EmpireConfig.PopCurrent.HRV + " < " + EmpireConfig.PopLimits.HRV)
+        if (EmpireConfig.PopCurrent.HRV < EmpireConfig.PopLimits.HRV && !working) {
+            console.log("HRV creep created!");
             Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
+            working = true;
         } else {
             console.log("HRV at Capacity!");
         }
-        /*
-        if (EmpireConfig.PopCurrent.UPG < EmpireConfig.PopLimits.UPG) {
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), new HRVRolePreset);
+
+        console.log("Creation Check: UPG")
+        console.log(EmpireConfig.PopCurrent.UPG + " < " + EmpireConfig.PopLimits.UPG)
+        if (EmpireConfig.PopCurrent.UPG < EmpireConfig.PopLimits.UPG  && !working) {
+            console.log("UPG creep created!");
+            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
+            working = true;
         } else {
             console.log("UPG at Capacity!");
         }
         
-        if (EmpireConfig.PopCurrent.WRK < EmpireConfig.PopLimits.WRK) {
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), new HRVRolePreset);
+        console.log("Creation Check: WRK")
+        console.log(EmpireConfig.PopCurrent.WRK + " < " + EmpireConfig.PopLimits.WRK)
+        if (EmpireConfig.PopCurrent.WRK < EmpireConfig.PopLimits.WRK  && !working) {
+            console.log("WRK creep created!");
+            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
+            working = true;
         } else {
             console.log("WRK at Capacity!");
         }
-        */
     }
 }

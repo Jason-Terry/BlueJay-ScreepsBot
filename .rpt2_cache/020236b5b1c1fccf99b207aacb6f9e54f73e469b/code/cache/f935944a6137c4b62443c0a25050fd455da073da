@@ -1,1 +1,0 @@
-{"map":"{\"version\":3,\"file\":\"UpgradeTask.js\",\"sourceRoot\":\"\",\"sources\":[\"../../../src/tasks/UpgradeTask.ts\"],\"names\":[],\"mappings\":\"AAAA,MAAM;IACK,MAAM,CAAC,GAAG,CAAC,KAAY;IAE9B,CAAC;CACJ\"}","code":"export class UpgradeTask {\r\n    static run(creep) {\r\n    }\r\n}\r\n//# sourceMappingURL=UpgradeTask.js.map"}

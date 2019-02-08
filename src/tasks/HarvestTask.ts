@@ -6,10 +6,19 @@ export class HarvestTask {
         let cargoTotal = _.sum(creep.carry);
         // If we have room to carry
         if (creep.carryCapacity > cargoTotal) {
+            
             // Mine source
             if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(sources[0])
             }
+
+        } else {
+
+            // Unload
+            if (creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(Game.spawns['Spawn1'])
+            }
+                
         }
     }
 }

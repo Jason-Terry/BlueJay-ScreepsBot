@@ -44,7 +44,7 @@ export class CreepFactory {
         // HRV -> UPG -> WRK
         console.log("HRV Current: " + EmpireConfig.PopCurrent.HRV + " | Limit: " + EmpireConfig.PopLimits.HRV);
         if (EmpireConfig.PopCurrent.HRV < EmpireConfig.PopLimits.HRV) {
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), EmpireConfig.HRV_ROLE);
+            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
         } else {
             console.log("HRV at Capacity!");
         }

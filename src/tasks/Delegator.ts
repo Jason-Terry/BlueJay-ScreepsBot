@@ -1,6 +1,7 @@
 import { WorkerTask } from "./WorkerTask";
 import { HarvestTask } from "./HarvestTask";
 import { UpgradeTask } from "./UpgradeTask";
+import { RefillEngTask } from "./RefillEngTask";
 
 // Class that should see ALL tasks that need done, and delegate workers to them
 export class Delegator {
@@ -8,7 +9,7 @@ export class Delegator {
         for (let key in Game.creeps) {
             let creep = Game.creeps[key];            
             // Switch based on task set, if no task find one.
-            switch (creep.memory.task) {
+            switch (creep.memory.currTask) {
                 case "HRV":
                     HarvestTask.run(creep)    
                     break;
@@ -20,6 +21,9 @@ export class Delegator {
                     break;
                 case "HUA":
                     // WorkerTask.run(creep)    
+                    break;
+                case "RFL":
+                    RefillEngTask.run(creep)    
                     break;
                 default:
                     console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");

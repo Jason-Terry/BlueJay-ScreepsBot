@@ -14,17 +14,17 @@ export class CreepFactory {
         for(const i in Game.creeps) {
 
             let creep = Game.creeps[i];
-
+/* TRACE LOGS
             console.log(creep.name + " is of role...");
-            console.log(JSON.stringify(Memory.creeps[creep.name].task));
-
-            if (Memory.creeps[creep.name].task == "HRV") {
+            console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
+*/
+            if (Memory.creeps[creep.name].currTask == "HRV") {
                 EmpireConfig.PopCurrent.HRV += 1;
 
-            } else if (Memory.creeps[creep.name].task == "UPG") {
+            } else if (Memory.creeps[creep.name].currTask == "UPG") {
                 EmpireConfig.PopCurrent.UPG += 1;
 
-            } else if (Memory.creeps[creep.name].task == "WRK") {
+            } else if (Memory.creeps[creep.name].currTask == "WRK") {
                 EmpireConfig.PopCurrent.WRK += 1;
 
             } else {
@@ -33,6 +33,7 @@ export class CreepFactory {
         }
 
         // Is our new count, not the same as our current.
+        // INFO log
         console.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireConfig.PopCurrent));
         return;
     }

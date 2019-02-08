@@ -2344,13 +2344,13 @@ class EmpireConfig {
 }
 // Mem presets
 EmpireConfig.HRV_ROLE = {
-    task: "HRV"
+    currTask: "HRV"
 };
 EmpireConfig.UPG_ROLE = {
-    task: "UPG"
+    currTask: "UPG"
 };
 EmpireConfig.WRK_ROLE = {
-    task: "WRK"
+    currTask: "WRK"
 };
 // Config Objs
 EmpireConfig.PopLimits = {
@@ -2383,19 +2383,22 @@ class CreepFactory {
         // Get new count
         for (const i in Game.creeps) {
             let creep = Game.creeps[i];
-            console.log(creep.name + " is of role...");
-            console.log(JSON.stringify(Memory.creeps[creep.name].task));
-            if (Memory.creeps[creep.name].task == "HRV") {
+            /* TRACE LOGS
+                        console.log(creep.name + " is of role...");
+                        console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
+            */
+            if (Memory.creeps[creep.name].currTask == "HRV") {
                 EmpireConfig.PopCurrent.HRV += 1;
             }
-            else if (Memory.creeps[creep.name].task == "UPG") {
+            else if (Memory.creeps[creep.name].currTask == "UPG") {
                 EmpireConfig.PopCurrent.UPG += 1;
             }
-            else if (Memory.creeps[creep.name].task == "WRK") {
+            else if (Memory.creeps[creep.name].currTask == "WRK") {
                 EmpireConfig.PopCurrent.WRK += 1;
             }
         }
         // Is our new count, not the same as our current.
+        // INFO log
         console.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireConfig.PopCurrent));
         return;
     }
@@ -2444,14 +2447,18 @@ CreepFactory.JobList = [];
 class WorkerTask {
     static run(creep) {
         // Task Setup
-        let sources = creep.room.find(FIND_SOURCES);
         let cargoTotal = _.sum(creep.carry);
         // If we have room to carry
-        let target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-        if (target) {
-            if (creep.build(target) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+        if (cargoTotal > 0) {
+            let target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+            if (target) {
+                if (creep.build(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
+                }
             }
+        }
+        else {
+            creep.memory.currTask = "RFL";
         }
     }
 }
@@ -2480,9 +2487,36 @@ class HarvestTask {
 
 class UpgradeTask {
     static run(creep) {
-        if (creep.room.controller) {
-            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+        let cargoTotal = _.sum(creep.carry);
+        // If we have room to carry
+        if (cargoTotal > 0) {
+            if (creep.room.controller) {
+                if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(creep.room.controller);
+                }
+            }
+        }
+        else {
+            creep.memory.currTask = "RFL";
+        }
+    }
+}
+
+class RefillEngTask {
+    static run(creep) {
+        let cargoTotal = _.sum(creep.carry);
+        creep.room.storage;
+        // If full, get back to work
+        if (cargoTotal == creep.carryCapacity) {
+            creep.memory.currTask = creep.memory.prevTask;
+            creep.memory.prevTask = "NUL";
+        }
+        else {
+            // Fill er up
+            let targets = creep.room.find(FIND_MY_STRUCTURES);
+            JSON.stringify(targets);
+            if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[0]);
             }
         }
     }
@@ -2494,7 +2528,7 @@ class Delegator {
         for (let key in Game.creeps) {
             let creep = Game.creeps[key];
             // Switch based on task set, if no task find one.
-            switch (creep.memory.task) {
+            switch (creep.memory.currTask) {
                 case "HRV":
                     HarvestTask.run(creep);
                     break;
@@ -2506,6 +2540,9 @@ class Delegator {
                     break;
                 case "HUA":
                     // WorkerTask.run(creep)    
+                    break;
+                case "RFL":
+                    RefillEngTask.run(creep);
                     break;
                 default:
                     console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");

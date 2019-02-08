@@ -5,7 +5,8 @@ interface CreepMemory {
   role?: string;
   room?: string;
   working?: boolean;
-  task?: string;
+  currTask?: string;
+  prevTask?: string;
 }
 
 interface Memory {

@@ -1,0 +1,1 @@
+{"map":"{\"version\":3,\"file\":\"WorkerTask.js\",\"sourceRoot\":\"\",\"sources\":[\"../../../src/tasks/WorkerTask.ts\"],\"names\":[],\"mappings\":\"AAAA,MAAM;IACK,MAAM,CAAC,GAAG,CAAC,KAAY;IAE9B,CAAC;CACJ\"}","code":"export class WorkerTask {\r\n    static run(creep) {\r\n    }\r\n}\r\n//# sourceMappingURL=WorkerTask.js.map"}

@@ -11,6 +11,7 @@ export class Delegator {
             // Switch based on task set, if no task find one.
             switch (creep.memory.currTask) {
                 case "HRV":
+                    console.log("Running HRV task for " + creep.name);
                     HarvestTask.run(creep)    
                     break;
                 case "UPG":

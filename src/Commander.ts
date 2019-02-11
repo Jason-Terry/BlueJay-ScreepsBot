@@ -1,5 +1,5 @@
 import { CreepFactory } from "creeps/CreepFactory";
-import { Delegator } from "tasks/Delegator";
+import { Delegator } from "Delegator";
 
 export class Commander {
 

@@ -1,7 +1,7 @@
-import { WorkerTask } from "./WorkerTask";
-import { HarvestTask } from "./HarvestTask";
-import { UpgradeTask } from "./UpgradeTask";
-import { RefillEngTask } from "./RefillEngTask";
+import { WorkerTask } from "./tasks/WorkerTask";
+import { HarvestTask } from "./tasks/HarvestTask";
+import { UpgradeTask } from "./tasks/UpgradeTask";
+import { RefillEngTask } from "./tasks/RefillEngTask";
 
 // Class that should see ALL tasks that need done, and delegate workers to them
 export class Delegator {

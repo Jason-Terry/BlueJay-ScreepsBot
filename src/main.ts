@@ -1,5 +1,5 @@
 import { ErrorMapper } from "utils/ErrorMapper";
-import { Commander } from "utils/Commander";
+import { Commander } from "Commander";
 
 // import Commander from "utils/Commander";
 

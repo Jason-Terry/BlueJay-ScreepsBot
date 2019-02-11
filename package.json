@@ -7,10 +7,10 @@
   "scripts": {
     "lint": "tslint -p tsconfig.json \"src/**/*.ts\"",
     "build": "rollup -c",
+    "test": "mocha -r ts-node/register tests/*.spec.ts",
     "push-main": "rollup -c --environment DEST:main",
     "push-pserver": "rollup -c --environment DEST:pserver",
     "push-sim": "rollup -c --environment DEST:sim",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "watch-main": "rollup -cw --environment DEST:main",
     "watch-pserver": "rollup -cw --environment DEST:pserver",
     "watch-sim": "rollup -cw --environment DEST:sim"
@@ -30,6 +30,11 @@
     "@types/mongodb": "^3.1.4",
     "@types/node": "^10.7.1",
     "@types/screeps": "^2.4.0",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-node": "^8.0.2",
     "prettier": "^1.14.0",
     "rollup": "^0.63.4",
     "rollup-plugin-clear": "^2.0.7",

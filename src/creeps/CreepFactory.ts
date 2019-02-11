@@ -1,6 +1,11 @@
 import { CreepBodies } from "./CreepBodies"
-import { EmpireConfig } from "EmpireConfig";
+import { EmpireConfig } from "Empire";
+import { EmpireStats  } from "Empire";
 import { CreepNameGen } from "utils/CreepNameGen";
+
+// Tick
+// 1. RollCall to see what the current roles of living creeps are.
+// 2. 
 
 export class CreepFactory {
 
@@ -8,7 +13,7 @@ export class CreepFactory {
 
     public static rollcall() {
         // Reset the count
-        EmpireConfig.PopCurrent.reset();
+        EmpireStats.CurrentPopulation.reset();
 
         // Get new count
         for(const i in Game.creeps) {
@@ -18,14 +23,14 @@ export class CreepFactory {
             console.log(creep.name + " is of role...");
             console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
 */
-            if (Memory.creeps[creep.name].currTask == "HRV") {
-                EmpireConfig.PopCurrent.HRV += 1;
+            if (Memory.creeps[creep.name].role == "HRV") {
+                EmpireStats.CurrentPopulation.HRV += 1;
 
-            } else if (Memory.creeps[creep.name].currTask == "UPG") {
-                EmpireConfig.PopCurrent.UPG += 1;
+            } else if (Memory.creeps[creep.name].role == "UPG") {
+                EmpireStats.CurrentPopulation.UPG += 1;
 
-            } else if (Memory.creeps[creep.name].currTask == "WRK") {
-                EmpireConfig.PopCurrent.WRK += 1;
+            } else if (Memory.creeps[creep.name].role == "WRK") {
+                EmpireStats.CurrentPopulation.WRK += 1;
 
             } else {
                 // error
@@ -34,47 +39,37 @@ export class CreepFactory {
 
         // Is our new count, not the same as our current.
         // INFO log
-        console.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireConfig.PopCurrent));
+        console.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireStats.CurrentPopulation));
         return;
     }
 
     public static create() {
         // HRV -> UPG -> WRK
-        let working = false;
         console.log("Checking if working..")
         if(Game.spawns['Spawn1'].spawning) {
-            console.log("Currently working.. Setting flag...")
-            working = true;
+            console.log("Currently working..")
+            return;
         }
 
         console.log("Creation Check: HRV")
-        console.log(EmpireConfig.PopCurrent.HRV + " < " + EmpireConfig.PopLimits.HRV)
-        if (EmpireConfig.PopCurrent.HRV < EmpireConfig.PopLimits.HRV && !working) {
+        if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
             console.log("HRV creep created!");
             Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
-            working = true;
-        } else {
-            console.log("HRV at Capacity!");
+            return;
         }
 
         console.log("Creation Check: UPG")
-        console.log(EmpireConfig.PopCurrent.UPG + " < " + EmpireConfig.PopLimits.UPG)
-        if (EmpireConfig.PopCurrent.UPG < EmpireConfig.PopLimits.UPG  && !working) {
+        if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
             console.log("UPG creep created!");
             Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
-            working = true;
-        } else {
-            console.log("UPG at Capacity!");
+            return;
         }
         
         console.log("Creation Check: WRK")
-        console.log(EmpireConfig.PopCurrent.WRK + " < " + EmpireConfig.PopLimits.WRK)
-        if (EmpireConfig.PopCurrent.WRK < EmpireConfig.PopLimits.WRK  && !working) {
+        if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK ) {
             console.log("WRK creep created!");
             Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
-            working = true;
-        } else {
-            console.log("WRK at Capacity!");
+            return;
         }
     }
 }

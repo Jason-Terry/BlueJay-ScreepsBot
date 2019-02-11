@@ -2334,64 +2334,44 @@ ErrorMapper.cache = {};
 class CreepBodies {
 }
 // Harvester go find sources and harvest energy.
-<<<<<<< HEAD
 // COST: 250
 CreepBodies.T1_WORKER = [MOVE, MOVE, WORK, CARRY];
 // Drones build and repair structures.
 // COST: 450
-=======
-CreepBodies.T1_WORKER = [MOVE, MOVE, WORK, CARRY];
-// Drones build and repair structures.
->>>>>>> Prep for rebase.
 CreepBodies.T2_WORKER = [MOVE, MOVE, WORK, WORK, WORK, CARRY];
 
 class EmpireConfig {
 }
-// Mem presets
+// Should parse the config file if one has not been parsed
+// Should setup at first loop iteration.
+// Then check config hash for changes, every time the config is saves, gen a new hash.
+// If the hash changes, load the new config.
+// Creep Memory Presets
 EmpireConfig.HRV_ROLE = {
-<<<<<<< HEAD
+    role: "HRV",
     currTask: "HRV"
 };
 EmpireConfig.UPG_ROLE = {
+    role: "UPG",
     currTask: "UPG"
 };
 EmpireConfig.WRK_ROLE = {
+    role: "WRK",
     currTask: "WRK"
 };
-// Config Objs
-EmpireConfig.PopLimits = {
-    "HRV": 5,
-    "UPG": 5,
-    "WRK": 3
+// Configuration Objects
+EmpireConfig.PopulationLimits = {
+    HRV: 1,
+    UPG: 1,
+    WRK: 1
 };
-EmpireConfig.PopCurrent = {
-=======
-    task: "HRV"
-};
-EmpireConfig.UPG_ROLE = {
-    task: "UPG"
-};
-EmpireConfig.WRK_ROLE = {
-    task: "WRK"
-};
-// Config Objs
-EmpireConfig.PopLimits = {
-    "TOTAL": 5,
-    "HRV": 3,
-    "UPG": 2,
-    "WRK": 0
-};
-EmpireConfig.PopCurrent = {
-    "TOTAL": 0,
->>>>>>> Prep for rebase.
-    "HRV": 0,
-    "UPG": 0,
-    "WRK": 0,
+class EmpireStats {
+}
+EmpireStats.CurrentPopulation = {
+    HRV: 0,
+    UPG: 0,
+    WRK: 0,
     reset: function () {
-<<<<<<< HEAD
-=======
-        this.TOTAL = 0;
->>>>>>> Prep for rebase.
         this.HRV = 0;
         this.UPG = 0;
         this.WRK = 0;
@@ -2405,118 +2385,66 @@ class CreepNameGen {
     }
 }
 
-<<<<<<< HEAD
-=======
-// MEM Presets
->>>>>>> Prep for rebase.
+// Tick
+// 1. RollCall to see what the current roles of living creeps are.
+// 2. 
 class CreepFactory {
     static rollcall() {
         // Reset the count
-        EmpireConfig.PopCurrent.reset();
+        EmpireStats.CurrentPopulation.reset();
         // Get new count
         for (const i in Game.creeps) {
             let creep = Game.creeps[i];
-<<<<<<< HEAD
             /* TRACE LOGS
                         console.log(creep.name + " is of role...");
                         console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
             */
-            if (Memory.creeps[creep.name].currTask == "HRV") {
-                EmpireConfig.PopCurrent.HRV += 1;
+            if (Memory.creeps[creep.name].role == "HRV") {
+                EmpireStats.CurrentPopulation.HRV += 1;
             }
-            else if (Memory.creeps[creep.name].currTask == "UPG") {
-                EmpireConfig.PopCurrent.UPG += 1;
+            else if (Memory.creeps[creep.name].role == "UPG") {
+                EmpireStats.CurrentPopulation.UPG += 1;
             }
-            else if (Memory.creeps[creep.name].currTask == "WRK") {
-=======
-            console.log(creep.name + " is of role...");
-            console.log(JSON.stringify(Memory.creeps[creep.name].task));
-            if (Memory.creeps[creep.name].task == "HRV") {
-                EmpireConfig.PopCurrent.HRV += 1;
-            }
-            else if (Memory.creeps[creep.name].task == "UPG") {
-                EmpireConfig.PopCurrent.UPG += 1;
-            }
-            else if (Memory.creeps[creep.name].task == "WRK") {
->>>>>>> Prep for rebase.
-                EmpireConfig.PopCurrent.WRK += 1;
+            else if (Memory.creeps[creep.name].role == "WRK") {
+                EmpireStats.CurrentPopulation.WRK += 1;
             }
         }
         // Is our new count, not the same as our current.
-<<<<<<< HEAD
         // INFO log
-=======
->>>>>>> Prep for rebase.
-        console.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireConfig.PopCurrent));
+        console.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireStats.CurrentPopulation));
         return;
     }
     static create() {
         // HRV -> UPG -> WRK
-<<<<<<< HEAD
-        let working = false;
         console.log("Checking if working..");
         if (Game.spawns['Spawn1'].spawning) {
-            console.log("Currently working.. Setting flag...");
-            working = true;
+            console.log("Currently working..");
+            return;
         }
         console.log("Creation Check: HRV");
-        console.log(EmpireConfig.PopCurrent.HRV + " < " + EmpireConfig.PopLimits.HRV);
-        if (EmpireConfig.PopCurrent.HRV < EmpireConfig.PopLimits.HRV && !working) {
+        if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
             console.log("HRV creep created!");
             Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
-            working = true;
-=======
-        console.log("HRV Current: " + EmpireConfig.PopCurrent.HRV + " | Limit: " + EmpireConfig.PopLimits.HRV);
-        if (EmpireConfig.PopCurrent.HRV < EmpireConfig.PopLimits.HRV) {
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
->>>>>>> Prep for rebase.
+            return;
         }
-        else {
-            console.log("HRV at Capacity!");
-        }
-<<<<<<< HEAD
         console.log("Creation Check: UPG");
-        console.log(EmpireConfig.PopCurrent.UPG + " < " + EmpireConfig.PopLimits.UPG);
-        if (EmpireConfig.PopCurrent.UPG < EmpireConfig.PopLimits.UPG && !working) {
+        if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
             console.log("UPG creep created!");
             Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
-            working = true;
-        }
-        else {
-            console.log("UPG at Capacity!");
+            return;
         }
         console.log("Creation Check: WRK");
-        console.log(EmpireConfig.PopCurrent.WRK + " < " + EmpireConfig.PopLimits.WRK);
-        if (EmpireConfig.PopCurrent.WRK < EmpireConfig.PopLimits.WRK && !working) {
+        if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK) {
             console.log("WRK creep created!");
             Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
-            working = true;
+            return;
         }
-        else {
-            console.log("WRK at Capacity!");
-        }
-=======
-        /*
-        if (EmpireConfig.PopCurrent.UPG < EmpireConfig.PopLimits.UPG) {
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), new HRVRolePreset);
-        } else {
-            console.log("UPG at Capacity!");
-        }
-        
-        if (EmpireConfig.PopCurrent.WRK < EmpireConfig.PopLimits.WRK) {
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), new HRVRolePreset);
-        } else {
-            console.log("WRK at Capacity!");
-        }
-        */
->>>>>>> Prep for rebase.
     }
 }
 CreepFactory.JobList = [];
 
 class WorkerTask {
     static run(creep) {
-<<<<<<< HEAD
         // Task Setup
         let cargoTotal = _.sum(creep.carry);
         // If we have room to carry
@@ -2531,8 +2459,6 @@ class WorkerTask {
         else {
             creep.memory.currTask = "RFL";
         }
-=======
->>>>>>> Prep for rebase.
     }
 }
 
@@ -2543,26 +2469,16 @@ class HarvestTask {
         let sources = creep.room.find(FIND_SOURCES);
         let cargoTotal = _.sum(creep.carry);
         // If we have room to carry
-<<<<<<< HEAD
-        if (creep.carryCapacity > cargoTotal) {
-            // Mine source
-            if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-=======
         console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         if (creep.carryCapacity > cargoTotal) {
             // Mine source
             if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                console.log("Mmoving...");
->>>>>>> Prep for rebase.
+                console.log("Moving...");
                 creep.moveTo(sources[0]);
             }
         }
         else {
-<<<<<<< HEAD
-            // Unload
-=======
-            console.log(creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY));
->>>>>>> Prep for rebase.
+            // Unload Source
             if (creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(Game.spawns['Spawn1']);
             }
@@ -2572,7 +2488,6 @@ class HarvestTask {
 
 class UpgradeTask {
     static run(creep) {
-<<<<<<< HEAD
         let cargoTotal = _.sum(creep.carry);
         // If we have room to carry
         if (cargoTotal > 0) {
@@ -2589,13 +2504,15 @@ class UpgradeTask {
     }
 }
 
-class RefillEngTask {
+class LoadEnergyTask {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
+        console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity);
+        console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
         // If full, get back to work
         if (cargoTotal == creep.carryCapacity) {
             // TRC log
-            console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity);
+            console.log(creep.name + " FULL!");
             console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
             creep.memory.currTask = creep.memory.prevTask;
             creep.memory.prevTask = "NUL";
@@ -2604,12 +2521,11 @@ class RefillEngTask {
             // Fill er up
             let targets = creep.room.find(FIND_MY_STRUCTURES);
             JSON.stringify(targets);
-            if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0]);
+            console.log(targets);
+            if (creep.withdraw(targets[1], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[1]);
             }
         }
-=======
->>>>>>> Prep for rebase.
     }
 }
 
@@ -2619,31 +2535,26 @@ class Delegator {
         for (let key in Game.creeps) {
             let creep = Game.creeps[key];
             // Switch based on task set, if no task find one.
-<<<<<<< HEAD
             switch (creep.memory.currTask) {
                 case "HRV":
-=======
-            switch (creep.memory.task) {
-                case "HRV":
                     console.log("Running HRV task for " + creep.name);
->>>>>>> Prep for rebase.
                     HarvestTask.run(creep);
                     break;
                 case "UPG":
+                    console.log("Running UPG task for " + creep.name);
                     UpgradeTask.run(creep);
                     break;
                 case "WRK":
+                    console.log("Running WRK task for " + creep.name);
                     WorkerTask.run(creep);
                     break;
                 case "HUA":
                     // WorkerTask.run(creep)    
                     break;
-<<<<<<< HEAD
                 case "RFL":
-                    RefillEngTask.run(creep);
+                    console.log("Running RFL task for " + creep.name);
+                    LoadEnergyTask.run(creep);
                     break;
-=======
->>>>>>> Prep for rebase.
                 default:
                     console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
                     break;

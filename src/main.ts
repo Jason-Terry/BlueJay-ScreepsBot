@@ -1,7 +1,5 @@
 import { ErrorMapper } from "utils/ErrorMapper";
-import { Commander } from "Commander";
-
-// import Commander from "utils/Commander";
+import { Commander } from "./Commander";
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code

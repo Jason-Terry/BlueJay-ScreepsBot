@@ -1,7 +1,7 @@
 import { WorkerTask } from "./tasks/WorkerTask";
 import { HarvestTask } from "./tasks/HarvestTask";
 import { UpgradeTask } from "./tasks/UpgradeTask";
-import { RefillEngTask } from "./tasks/RefillEngTask";
+import { LoadEnergyTask } from "./tasks/LoadEnegeryTask";
 
 // Class that should see ALL tasks that need done, and delegate workers to them
 export class Delegator {
@@ -15,16 +15,19 @@ export class Delegator {
                     HarvestTask.run(creep)    
                     break;
                 case "UPG":
+                    console.log("Running UPG task for " + creep.name);
                     UpgradeTask.run(creep)    
                     break;
                 case "WRK":
+                    console.log("Running WRK task for " + creep.name);
                     WorkerTask.run(creep)    
                     break;
                 case "HUA":
                     // WorkerTask.run(creep)    
                     break;
                 case "RFL":
-                    RefillEngTask.run(creep)    
+                    console.log("Running RFL task for " + creep.name);  
+                    LoadEnergyTask.run(creep)    
                     break;
                 default:
                     console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");

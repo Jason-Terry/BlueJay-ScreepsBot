@@ -11,6 +11,7 @@ export class WorkerTask {
                 }
             }
         } else {
+            creep.memory.prevTask = creep.memory.currTask;
             creep.memory.currTask = "RFL";
         }
     }

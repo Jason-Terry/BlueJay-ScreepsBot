@@ -31,6 +31,7 @@ export class Delegator {
                     break;
                 default:
                     console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
+                    creep.memory.currTask = creep.memory.role;
                     break;
             }
         }

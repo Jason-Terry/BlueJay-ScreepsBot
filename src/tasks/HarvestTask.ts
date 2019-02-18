@@ -9,13 +9,13 @@ export class HarvestTask {
         let cargoTotal = _.sum(creep.carry);
 
         // If we have room to carry
-        console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
+        // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         
         if (creep.carryCapacity > cargoTotal) {
             
             // Mine source
             if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                console.log("Moving...")
+                // console.log("Moving...")
                 creep.moveTo(sources[0])
             }
 

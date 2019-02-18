@@ -60,10 +60,12 @@ export class CreepFactory {
 
         console.log("Creation Check: UPG")
         if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
-            console.log("UPG creep created!");
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
+                console.log("UPG creep created!");
+            };
             return;
-        }
+        };
         
         console.log("Creation Check: WRK")
         if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK ) {

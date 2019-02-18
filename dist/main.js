@@ -2361,10 +2361,16 @@ EmpireConfig.WRK_ROLE = {
 };
 // Configuration Objects
 EmpireConfig.PopulationLimits = {
-    HRV: 1,
-    UPG: 1,
-    WRK: 1
+    HRV: 3,
+    UPG: 3,
+    WRK: 3
 };
+/*
+export class RoomStructs {
+
+
+}
+*/
 class EmpireStats {
 }
 EmpireStats.CurrentPopulation = {
@@ -2429,8 +2435,10 @@ class CreepFactory {
         }
         console.log("Creation Check: UPG");
         if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
-            console.log("UPG creep created!");
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
+                console.log("UPG creep created!");
+            }
             return;
         }
         console.log("Creation Check: WRK");
@@ -2457,6 +2465,7 @@ class WorkerTask {
             }
         }
         else {
+            creep.memory.prevTask = creep.memory.currTask;
             creep.memory.currTask = "RFL";
         }
     }
@@ -2469,11 +2478,11 @@ class HarvestTask {
         let sources = creep.room.find(FIND_SOURCES);
         let cargoTotal = _.sum(creep.carry);
         // If we have room to carry
-        console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
+        // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         if (creep.carryCapacity > cargoTotal) {
             // Mine source
             if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                console.log("Moving...");
+                // console.log("Moving...")
                 creep.moveTo(sources[0]);
             }
         }
@@ -2507,23 +2516,28 @@ class UpgradeTask {
 class LoadEnergyTask {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
-        console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity);
-        console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
+        // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
+        // console.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
         // If full, get back to work
         if (cargoTotal == creep.carryCapacity) {
-            // TRC log
+            /* TRC log
             console.log(creep.name + " FULL!");
             console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
+            */
             creep.memory.currTask = creep.memory.prevTask;
             creep.memory.prevTask = "NUL";
         }
         else {
             // Fill er up
-            let targets = creep.room.find(FIND_MY_STRUCTURES);
-            JSON.stringify(targets);
-            console.log(targets);
-            if (creep.withdraw(targets[1], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[1]);
+            let targets = creep.room.find(FIND_STRUCTURES, {
+                filter: function (s) {
+                    return s.structureType == STRUCTURE_CONTAINER ||
+                        s.structureType == STRUCTURE_EXTENSION ||
+                        s.structureType == STRUCTURE_SPAWN;
+                }
+            });
+            if (creep.withdraw(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[0]);
             }
         }
     }
@@ -2557,6 +2571,7 @@ class Delegator {
                     break;
                 default:
                     console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
+                    creep.memory.currTask = creep.memory.role;
                     break;
             }
         }

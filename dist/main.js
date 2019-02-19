@@ -2429,22 +2429,26 @@ class CreepFactory {
         }
         console.log("Creation Check: HRV");
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
-            console.log("HRV creep created!");
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
+                console.info("HRV creep created!");
+            }
             return;
         }
         console.log("Creation Check: UPG");
         if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
                 Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
-                console.log("UPG creep created!");
+                console.info("UPG creep created!");
             }
             return;
         }
         console.log("Creation Check: WRK");
         if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK) {
-            console.log("WRK creep created!");
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
+                console.info("WRK creep created!");
+            }
             return;
         }
     }
@@ -2551,26 +2555,22 @@ class Delegator {
             // Switch based on task set, if no task find one.
             switch (creep.memory.currTask) {
                 case "HRV":
-                    console.log("Running HRV task for " + creep.name);
                     HarvestTask.run(creep);
                     break;
                 case "UPG":
-                    console.log("Running UPG task for " + creep.name);
                     UpgradeTask.run(creep);
                     break;
                 case "WRK":
-                    console.log("Running WRK task for " + creep.name);
                     WorkerTask.run(creep);
                     break;
                 case "HUA":
                     // WorkerTask.run(creep)    
                     break;
                 case "RFL":
-                    console.log("Running RFL task for " + creep.name);
                     LoadEnergyTask.run(creep);
                     break;
                 default:
-                    console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
+                    console.info("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
                     creep.memory.currTask = creep.memory.role;
                     break;
             }

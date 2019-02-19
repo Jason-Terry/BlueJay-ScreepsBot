@@ -53,8 +53,10 @@ export class CreepFactory {
 
         console.log("Creation Check: HRV")
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
-            console.log("HRV creep created!");
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
+                console.info("HRV creep created!");
+            };
             return;
         }
 
@@ -62,15 +64,17 @@ export class CreepFactory {
         if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
                 Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
-                console.log("UPG creep created!");
+                console.info("UPG creep created!");
             };
             return;
         };
         
         console.log("Creation Check: WRK")
         if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK ) {
-            console.log("WRK creep created!");
-            Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
+                console.info("WRK creep created!");
+            };
             return;
         }
     }

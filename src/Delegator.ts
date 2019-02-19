@@ -11,26 +11,23 @@ export class Delegator {
             // Switch based on task set, if no task find one.
             switch (creep.memory.currTask) {
                 case "HRV":
-                    console.log("Running HRV task for " + creep.name);
-                    HarvestTask.run(creep)    
+                    HarvestTask.run(creep)
+
                     break;
                 case "UPG":
-                    console.log("Running UPG task for " + creep.name);
                     UpgradeTask.run(creep)    
                     break;
                 case "WRK":
-                    console.log("Running WRK task for " + creep.name);
                     WorkerTask.run(creep)    
                     break;
                 case "HUA":
                     // WorkerTask.run(creep)    
                     break;
-                case "RFL":
-                    console.log("Running RFL task for " + creep.name);  
+                case "RFL": 
                     LoadEnergyTask.run(creep)    
                     break;
                 default:
-                    console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
+                    console.info("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
                     creep.memory.currTask = creep.memory.role;
                     break;
             }

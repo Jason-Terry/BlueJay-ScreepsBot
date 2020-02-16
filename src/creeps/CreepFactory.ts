@@ -1,7 +1,6 @@
 import { CreepBodies } from "./CreepBodies"
 import { EmpireConfig } from "Empire";
 import { EmpireStats  } from "Empire";
-import { CreepNameGen } from "utils/CreepNameGen";
 
 // Tick
 // 1. RollCall to see what the current roles of living creeps are.
@@ -10,6 +9,11 @@ import { CreepNameGen } from "utils/CreepNameGen";
 export class CreepFactory {
 
     public static JobList = [];
+    
+    public static nameCreep(task: string) {
+        let id = Math.floor(1000 + Math.random() * 9000);
+        return task + String(id);
+    }
 
     public static rollcall() {
         // Reset the count
@@ -23,7 +27,7 @@ export class CreepFactory {
             console.log(creep.name + " is of role...");
             console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
 */
-            if (Memory.creeps[creep.name].role == "HRV") {
+            if (Memory.creeps[creep.name].role == "HAR") {
                 EmpireStats.CurrentPopulation.HRV += 1;
 
             } else if (Memory.creeps[creep.name].role == "UPG") {
@@ -45,37 +49,36 @@ export class CreepFactory {
 
     public static create() {
         // HRV -> UPG -> WRK
-        console.log("Checking if working..")
         if(Game.spawns['Spawn1'].spawning) {
-            console.log("Currently working..")
+            console.log("Room Spawner is Currently working..")
             return;
         }
 
-        console.log("Creation Check: HRV")
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
-            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
-                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
-                console.info("HRV creep created!");
+            console.log("Creation Check Passed: HAR")
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE });
+                console.log("HAR creep created!");
             };
             return;
         }
 
-        console.log("Creation Check: UPG")
         if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
-            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
-                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
-                console.info("UPG creep created!");
+            console.log("Creation Check Passed: UPG")
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
+                console.log("UPG creep created!");
             };
             return;
         };
         
-        console.log("Creation Check: WRK")
-        if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK ) {
-            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE, dryRun: true }) === 0) {
-                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
-                console.info("WRK creep created!");
-            };
-            return;
-        }
+        // if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK ) {
+        //     console.log("Creation Check Passed: WRK")
+        //     if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE, dryRun: true }) === 0) {
+        //         Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
+        //         console.log("WRK creep created!");
+        //     };
+        //     return;
+        // }
     }
 }

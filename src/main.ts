@@ -9,7 +9,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // TICK SETUP
 
   // SETUP LOGS
-  console.log('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
+  console.log('||||||| BLUE JAY SCREEPS DASHBOARD V1 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
   console.log(`Current game tick is ${Game.time}.`);
 
   Commander.runTick();

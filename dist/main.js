@@ -1101,7 +1101,7 @@ var quickSort = {
 
 
 
-var ArraySet$2 = arraySet.ArraySet;
+var ArraySet$1 = arraySet.ArraySet;
 
 var quickSort$1 = quickSort.quickSort;
 
@@ -1425,8 +1425,8 @@ function BasicSourceMapConsumer(aSourceMap, aSourceMapURL) {
   // are intended to be compressed and deduplicated, the TypeScript compiler
   // sometimes generates source maps with duplicates in them. See Github issue
   // #72 and bugzil.la/889492.
-  this._names = ArraySet$2.fromArray(names.map(String), true);
-  this._sources = ArraySet$2.fromArray(sources, true);
+  this._names = ArraySet$1.fromArray(names.map(String), true);
+  this._sources = ArraySet$1.fromArray(sources, true);
 
   this._absoluteSources = this._sources.toArray().map(function (s) {
     return util.computeSourceURL(sourceRoot, s, aSourceMapURL);
@@ -1481,8 +1481,8 @@ BasicSourceMapConsumer.fromSourceMap =
   function SourceMapConsumer_fromSourceMap(aSourceMap, aSourceMapURL) {
     var smc = Object.create(BasicSourceMapConsumer.prototype);
 
-    var names = smc._names = ArraySet$2.fromArray(aSourceMap._names.toArray(), true);
-    var sources = smc._sources = ArraySet$2.fromArray(aSourceMap._sources.toArray(), true);
+    var names = smc._names = ArraySet$1.fromArray(aSourceMap._names.toArray(), true);
+    var sources = smc._sources = ArraySet$1.fromArray(aSourceMap._sources.toArray(), true);
     smc.sourceRoot = aSourceMap._sourceRoot;
     smc.sourcesContent = aSourceMap._generateSourcesContent(smc._sources.toArray(),
                                                             smc.sourceRoot);
@@ -1981,8 +1981,8 @@ function IndexedSourceMapConsumer(aSourceMap, aSourceMapURL) {
     throw new Error('Unsupported version: ' + version);
   }
 
-  this._sources = new ArraySet$2();
-  this._names = new ArraySet$2();
+  this._sources = new ArraySet$1();
+  this._names = new ArraySet$1();
 
   var lastOffset = {
     line: -1,
@@ -2330,6 +2330,7 @@ class ErrorMapper {
 }
 // Cache previously mapped traces to improve performance
 ErrorMapper.cache = {};
+//# sourceMappingURL=ErrorMapper.js.map
 
 class CreepBodies {
 }
@@ -2338,7 +2339,8 @@ class CreepBodies {
 CreepBodies.T1_WORKER = [MOVE, MOVE, WORK, CARRY];
 // Drones build and repair structures.
 // COST: 450
-CreepBodies.T2_WORKER = [MOVE, MOVE, WORK, WORK, WORK, CARRY];
+CreepBodies.T2_WORKER = [MOVE, MOVE, WORK, WORK, CARRY, CARRY];
+//# sourceMappingURL=CreepBodies.js.map
 
 class EmpireConfig {
 }
@@ -2383,18 +2385,16 @@ EmpireStats.CurrentPopulation = {
         this.WRK = 0;
     }
 };
-
-class CreepNameGen {
-    static nameCreep(task) {
-        let id = Math.floor(1000 + Math.random() * 9000);
-        return task + String(id);
-    }
-}
+//# sourceMappingURL=Empire.js.map
 
 // Tick
 // 1. RollCall to see what the current roles of living creeps are.
 // 2. 
 class CreepFactory {
+    static nameCreep(task) {
+        let id = Math.floor(1000 + Math.random() * 9000);
+        return task + String(id);
+    }
     static rollcall() {
         // Reset the count
         EmpireStats.CurrentPopulation.reset();
@@ -2405,7 +2405,7 @@ class CreepFactory {
                         console.log(creep.name + " is of role...");
                         console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
             */
-            if (Memory.creeps[creep.name].role == "HRV") {
+            if (Memory.creeps[creep.name].role == "HAR") {
                 EmpireStats.CurrentPopulation.HRV += 1;
             }
             else if (Memory.creeps[creep.name].role == "UPG") {
@@ -2422,58 +2422,38 @@ class CreepFactory {
     }
     static create() {
         // HRV -> UPG -> WRK
-        console.log("Checking if working..");
         if (Game.spawns['Spawn1'].spawning) {
-            console.log("Currently working..");
+            console.log("Room Spawner is Currently working..");
             return;
         }
-        console.log("Creation Check: HRV");
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
-            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
-                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
-                console.info("HRV creep created!");
+            console.log("Creation Check Passed: HRV");
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
+                console.log("HRV creep created!");
             }
             return;
         }
-        console.log("Creation Check: UPG");
         if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
-            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
-                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
-                console.info("UPG creep created!");
+            console.log("Creation Check Passed: UPG");
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
+                console.log("UPG creep created!");
             }
             return;
         }
-        console.log("Creation Check: WRK");
-        if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK) {
-            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE, dryRun: true }) === 0) {
-                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, CreepNameGen.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
-                console.info("WRK creep created!");
-            }
-            return;
-        }
+        // if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK ) {
+        //     console.log("Creation Check Passed: WRK")
+        //     if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE, dryRun: true }) === 0) {
+        //         Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
+        //         console.log("WRK creep created!");
+        //     };
+        //     return;
+        // }
     }
 }
 CreepFactory.JobList = [];
-
-class WorkerTask {
-    static run(creep) {
-        // Task Setup
-        let cargoTotal = _.sum(creep.carry);
-        // If we have room to carry
-        if (cargoTotal > 0) {
-            let target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-            if (target) {
-                if (creep.build(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
-                }
-            }
-        }
-        else {
-            creep.memory.prevTask = creep.memory.currTask;
-            creep.memory.currTask = "RFL";
-        }
-    }
-}
+//# sourceMappingURL=CreepFactory.js.map
 
 // Class that contains creep logic for Harvesting energy from source.
 class HarvestTask {
@@ -2483,51 +2463,80 @@ class HarvestTask {
         let cargoTotal = _.sum(creep.carry);
         // If we have room to carry
         // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
-        if (creep.carryCapacity > cargoTotal) {
-            // Mine source
+        if (cargoTotal == creep.carryCapacity) {
+            // Let's drop off
+            console.log(creep.name + " FULL!");
+            console.log(creep.name + " | Task Set To " + "TRA");
+            creep.memory.prevTask = creep.memory.currTask;
+            creep.memory.currTask = "TRA";
+        }
+        else {
+            // Mine some energy
             if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
                 // console.log("Moving...")
                 creep.moveTo(sources[0]);
             }
         }
-        else {
-            // Unload Source
-            if (creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.spawns['Spawn1']);
-            }
-        }
     }
 }
+//# sourceMappingURL=HarvestTask.js.map
 
 class UpgradeTask {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
-        // If we have room to carry
-        if (cargoTotal > 0) {
+        if (cargoTotal <= 0) {
+            // lets get some energy
+            creep.memory.prevTask = creep.memory.currTask;
+            creep.memory.currTask = "WIT";
+        }
+        else {
+            // If we have energy on board
             if (creep.room.controller) {
                 if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller);
                 }
             }
         }
+    }
+}
+
+class TransferEnergyTask {
+    static run(creep) {
+        let cargoTotal = _.sum(creep.carry);
+        // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
+        // console.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
+        // If empty, get back to work
+        if (cargoTotal == 0) {
+            console.log(creep.name + " EMPTY!");
+            console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
+            creep.memory.currTask = creep.memory.prevTask;
+            creep.memory.prevTask = "NUL";
+        }
         else {
-            creep.memory.prevTask = creep.memory.currTask;
-            creep.memory.currTask = "RFL";
+            // Drop er off
+            let targets = creep.room.find(FIND_STRUCTURES, {
+                filter: function (s) {
+                    return s.structureType == STRUCTURE_CONTAINER ||
+                        s.structureType == STRUCTURE_EXTENSION ||
+                        s.structureType == STRUCTURE_SPAWN;
+                }
+            });
+            if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[0]);
+            }
         }
     }
 }
 
-class LoadEnergyTask {
+class WithdrawEnergyTask {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
         // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
         // console.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
         // If full, get back to work
         if (cargoTotal == creep.carryCapacity) {
-            /* TRC log
             console.log(creep.name + " FULL!");
             console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
-            */
             creep.memory.currTask = creep.memory.prevTask;
             creep.memory.prevTask = "NUL";
         }
@@ -2554,29 +2563,28 @@ class Delegator {
             let creep = Game.creeps[key];
             // Switch based on task set, if no task find one.
             switch (creep.memory.currTask) {
-                case "HRV":
+                case "HAR":
                     HarvestTask.run(creep);
                     break;
                 case "UPG":
                     UpgradeTask.run(creep);
                     break;
-                case "WRK":
-                    WorkerTask.run(creep);
+                case "WIT":
+                    WithdrawEnergyTask.run(creep);
                     break;
-                case "HUA":
-                    // WorkerTask.run(creep)    
-                    break;
-                case "RFL":
-                    LoadEnergyTask.run(creep);
+                case "TRA":
+                    TransferEnergyTask.run(creep);
                     break;
                 default:
-                    console.info("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
+                    console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
                     creep.memory.currTask = creep.memory.role;
+                    creep.memory.prevTask = "NUL";
                     break;
             }
         }
     }
 }
+//# sourceMappingURL=Delegator.js.map
 
 class Commander {
     setAlert(i) {
@@ -2620,11 +2628,12 @@ class Commander {
         // Handle task logic.
     }
 }
+//# sourceMappingURL=Commander.js.map
 
 const loop = ErrorMapper.wrapLoop(() => {
     // TICK SETUP
     // SETUP LOGS
-    console.log('||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
+    console.log('||||||| BLUE JAY SCREEPS DASHBOARD V1 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
     console.log(`Current game tick is ${Game.time}.`);
     Commander.runTick();
     // Automatically delete memory of missing creeps
@@ -2634,6 +2643,7 @@ const loop = ErrorMapper.wrapLoop(() => {
         }
     }
 });
+//# sourceMappingURL=main.js.map
 
 exports.loop = loop;
 //# sourceMappingURL=main.js.map

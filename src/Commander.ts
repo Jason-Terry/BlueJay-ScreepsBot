@@ -3,8 +3,8 @@ import { Delegator } from "Delegator";
 
 export class Commander {
 
-    private intelLevel: string; // INF > DEB > TRC
-    private alertLevel: number; // 0 > 1 > 2
+    private intelLevel: string; // INF <-> DEB <-> TRC
+    private alertLevel: number; // 0 <-> 1 <-> 2
 
     public setAlert(i: number) {
         if (i > 0 || i > 2) {

@@ -2363,7 +2363,7 @@ EmpireConfig.WRK_ROLE = {
 };
 // Configuration Objects
 EmpireConfig.PopulationLimits = {
-    HRV: 3,
+    HRV: 6,
     UPG: 3,
     WRK: 3
 };
@@ -2427,10 +2427,10 @@ class CreepFactory {
             return;
         }
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
-            console.log("Creation Check Passed: HRV");
-            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
-                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HRV"), { memory: EmpireConfig.HRV_ROLE });
-                console.log("HRV creep created!");
+            console.log("Creation Check Passed: HAR");
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE });
+                console.log("HAR creep created!");
             }
             return;
         }
@@ -2499,6 +2499,7 @@ class UpgradeTask {
         }
     }
 }
+//# sourceMappingURL=UpgradeTask.js.map
 
 class TransferEnergyTask {
     static run(creep) {
@@ -2527,6 +2528,7 @@ class TransferEnergyTask {
         }
     }
 }
+//# sourceMappingURL=TransferEnergyTask.js.map
 
 class WithdrawEnergyTask {
     static run(creep) {
@@ -2555,9 +2557,27 @@ class WithdrawEnergyTask {
         }
     }
 }
+//# sourceMappingURL=WithdrawEnegeryTask.js.map
 
 // Class that should see ALL tasks that need done, and delegate workers to them
 class Delegator {
+    // checks and returns a creeps role
+    // protects against a invalid role being set
+    static roleCheck(creep) {
+        switch (creep.memory.role) {
+            case "HAR":
+                return creep.memory.role;
+            case "UPG":
+                return creep.memory.role;
+            case "WRK":
+                return creep.memory.role;
+            default:
+                // will cause HAR role to be over-filled?
+                creep.memory.role = "HAR";
+                return creep.memory.role;
+        }
+    }
+    // runs the logic scripts for each task
     static delegate() {
         for (let key in Game.creeps) {
             let creep = Game.creeps[key];
@@ -2577,7 +2597,7 @@ class Delegator {
                     break;
                 default:
                     console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
-                    creep.memory.currTask = creep.memory.role;
+                    creep.memory.currTask = this.roleCheck(creep);
                     creep.memory.prevTask = "NUL";
                     break;
             }

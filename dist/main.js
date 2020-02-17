@@ -2426,6 +2426,7 @@ class CreepFactory {
             console.log("Room Spawner is Currently working..");
             return;
         }
+        // Tier Check?
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
             console.log("Creation Check Passed: HAR");
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
@@ -2453,7 +2454,6 @@ class CreepFactory {
     }
 }
 CreepFactory.JobList = [];
-//# sourceMappingURL=CreepFactory.js.map
 
 // Class that contains creep logic for Harvesting energy from source.
 class HarvestTask {

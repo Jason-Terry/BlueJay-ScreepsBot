@@ -54,6 +54,8 @@ export class CreepFactory {
             return;
         }
 
+        // Tier Check?
+
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
             console.log("Creation Check Passed: HAR")
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {

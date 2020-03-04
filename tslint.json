@@ -1,9 +1,4 @@
 {
-  "rulesDirectory": "tslint-plugin-prettier",
-  "extends" : [
-    "tslint:recommended",
-    "tslint-config-prettier"
-  ],
   "rules": {
     "forin": false,
     "interface-name": [true, "never-prefix"],

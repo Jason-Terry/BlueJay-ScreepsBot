@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { Logger } from 'utils/Logger';
 
 // Class that contains creep logic for Harvesting energy from source.
 export class HarvestTask {
@@ -12,16 +12,14 @@ export class HarvestTask {
         // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         if (cargoTotal == creep.carryCapacity) {
             // Let's drop off
-            console.log(creep.name + " FULL!"); 
-            console.log(creep.name + " | Task Set To " + "TRA");          
-            
+            creep.say("ENG Full!");       
             creep.memory.prevTask = creep.memory.currTask;
             creep.memory.currTask = "TRA";
         } else {
             // Mine some energy
             if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                // console.log("Moving...")
-                creep.moveTo(sources[0])
+                creep.say("Moving!");                
+                creep.moveTo(sources[0]);
             }
         }
     }

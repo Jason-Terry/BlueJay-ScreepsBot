@@ -2330,7 +2330,6 @@ class ErrorMapper {
 }
 // Cache previously mapped traces to improve performance
 ErrorMapper.cache = {};
-//# sourceMappingURL=ErrorMapper.js.map
 
 class CreepBodies {
 }
@@ -2340,7 +2339,6 @@ CreepBodies.T1_WORKER = [MOVE, MOVE, WORK, CARRY];
 // Drones build and repair structures.
 // COST: 450
 CreepBodies.T2_WORKER = [MOVE, MOVE, WORK, WORK, CARRY, CARRY];
-//# sourceMappingURL=CreepBodies.js.map
 
 class EmpireConfig {
 }
@@ -2364,7 +2362,7 @@ EmpireConfig.WRK_ROLE = {
 // Configuration Objects
 EmpireConfig.PopulationLimits = {
     HRV: 6,
-    UPG: 3,
+    UPG: 6,
     WRK: 3
 };
 /*
@@ -2385,7 +2383,6 @@ EmpireStats.CurrentPopulation = {
         this.WRK = 0;
     }
 };
-//# sourceMappingURL=Empire.js.map
 
 // Tick
 // 1. RollCall to see what the current roles of living creeps are.
@@ -2465,21 +2462,19 @@ class HarvestTask {
         // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         if (cargoTotal == creep.carryCapacity) {
             // Let's drop off
-            console.log(creep.name + " FULL!");
-            console.log(creep.name + " | Task Set To " + "TRA");
+            creep.say("ENG Full!");
             creep.memory.prevTask = creep.memory.currTask;
             creep.memory.currTask = "TRA";
         }
         else {
             // Mine some energy
             if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                // console.log("Moving...")
+                creep.say("Moving!");
                 creep.moveTo(sources[0]);
             }
         }
     }
 }
-//# sourceMappingURL=HarvestTask.js.map
 
 class UpgradeTask {
     static run(creep) {
@@ -2499,7 +2494,6 @@ class UpgradeTask {
         }
     }
 }
-//# sourceMappingURL=UpgradeTask.js.map
 
 class TransferEnergyTask {
     static run(creep) {
@@ -2528,7 +2522,6 @@ class TransferEnergyTask {
         }
     }
 }
-//# sourceMappingURL=TransferEnergyTask.js.map
 
 class WithdrawEnergyTask {
     static run(creep) {
@@ -2557,7 +2550,6 @@ class WithdrawEnergyTask {
         }
     }
 }
-//# sourceMappingURL=WithdrawEnegeryTask.js.map
 
 // Class that should see ALL tasks that need done, and delegate workers to them
 class Delegator {
@@ -2604,7 +2596,6 @@ class Delegator {
         }
     }
 }
-//# sourceMappingURL=Delegator.js.map
 
 class Commander {
     setAlert(i) {
@@ -2648,7 +2639,6 @@ class Commander {
         // Handle task logic.
     }
 }
-//# sourceMappingURL=Commander.js.map
 
 const loop = ErrorMapper.wrapLoop(() => {
     // TICK SETUP
@@ -2663,7 +2653,6 @@ const loop = ErrorMapper.wrapLoop(() => {
         }
     }
 });
-//# sourceMappingURL=main.js.map
 
 exports.loop = loop;
 //# sourceMappingURL=main.js.map

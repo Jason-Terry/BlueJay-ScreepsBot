@@ -12,7 +12,7 @@ export class HarvestTask {
         // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         if (cargoTotal == creep.carryCapacity) {
             // Let's drop off
-            creep.say("ENG Full!");       
+            creep.say("ENG Full! More than 10!!!!");       
             creep.memory.prevTask = creep.memory.currTask;
             creep.memory.currTask = "TRA";
         } else {

@@ -1,4 +1,6 @@
-export class WorkerTask {
+import { Task } from "./Task";
+
+export class WorkerTask extends Task {
     public static run(creep: Creep) {
         // Task Setup
         let cargoTotal = _.sum(creep.carry);
@@ -11,8 +13,7 @@ export class WorkerTask {
                 }
             }
         } else {
-            creep.memory.prevTask = creep.memory.currTask;
-            creep.memory.currTask = "RFL";
+            this.setTask(creep, "RFL");
         }
     }
 }

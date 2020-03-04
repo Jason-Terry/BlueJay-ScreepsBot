@@ -1101,7 +1101,7 @@ var quickSort = {
 
 
 
-var ArraySet$1 = arraySet.ArraySet;
+var ArraySet$2 = arraySet.ArraySet;
 
 var quickSort$1 = quickSort.quickSort;
 
@@ -1425,8 +1425,8 @@ function BasicSourceMapConsumer(aSourceMap, aSourceMapURL) {
   // are intended to be compressed and deduplicated, the TypeScript compiler
   // sometimes generates source maps with duplicates in them. See Github issue
   // #72 and bugzil.la/889492.
-  this._names = ArraySet$1.fromArray(names.map(String), true);
-  this._sources = ArraySet$1.fromArray(sources, true);
+  this._names = ArraySet$2.fromArray(names.map(String), true);
+  this._sources = ArraySet$2.fromArray(sources, true);
 
   this._absoluteSources = this._sources.toArray().map(function (s) {
     return util.computeSourceURL(sourceRoot, s, aSourceMapURL);
@@ -1481,8 +1481,8 @@ BasicSourceMapConsumer.fromSourceMap =
   function SourceMapConsumer_fromSourceMap(aSourceMap, aSourceMapURL) {
     var smc = Object.create(BasicSourceMapConsumer.prototype);
 
-    var names = smc._names = ArraySet$1.fromArray(aSourceMap._names.toArray(), true);
-    var sources = smc._sources = ArraySet$1.fromArray(aSourceMap._sources.toArray(), true);
+    var names = smc._names = ArraySet$2.fromArray(aSourceMap._names.toArray(), true);
+    var sources = smc._sources = ArraySet$2.fromArray(aSourceMap._sources.toArray(), true);
     smc.sourceRoot = aSourceMap._sourceRoot;
     smc.sourcesContent = aSourceMap._generateSourcesContent(smc._sources.toArray(),
                                                             smc.sourceRoot);
@@ -1981,8 +1981,8 @@ function IndexedSourceMapConsumer(aSourceMap, aSourceMapURL) {
     throw new Error('Unsupported version: ' + version);
   }
 
-  this._sources = new ArraySet$1();
-  this._names = new ArraySet$1();
+  this._sources = new ArraySet$2();
+  this._names = new ArraySet$2();
 
   var lastOffset = {
     line: -1,
@@ -2462,7 +2462,7 @@ class HarvestTask {
         // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         if (cargoTotal == creep.carryCapacity) {
             // Let's drop off
-            creep.say("ENG Full!");
+            creep.say("ENG Full! More than 10!!!!");
             creep.memory.prevTask = creep.memory.currTask;
             creep.memory.currTask = "TRA";
         }
@@ -2640,11 +2640,33 @@ class Commander {
     }
 }
 
+class RoomMapper {
+    //if valid count up else reset the counter
+    static newRoomView(room) {
+        let roomOwner = "NONE";
+        let roomControllerLevel = "UNKOWN";
+        let controllerPos = new RoomPosition(1, 1, room.name);
+        if (room.controller) {
+            controllerPos = room.controller.pos;
+            roomOwner = room.controller.owner.username;
+            roomControllerLevel = room.controller.level.toString();
+        }
+        new RoomVisual().text(`${room.name} | ${roomOwner} | ${roomControllerLevel}`, 1, 1, { align: 'left' });
+        let topLeft = new RoomPosition(controllerPos.x, controllerPos.y, room.name);
+        let botRight = new RoomPosition(controllerPos.x + 0.75, controllerPos.y + 0.75, room.name);
+        let topRight = new RoomPosition(controllerPos.x + 1, controllerPos.y - 1, room.name);
+        let botLeft = new RoomPosition(controllerPos.x - 1, controllerPos.y + 1, room.name);
+        room.visual.line(topLeft, botRight, { color: 'red', lineStyle: 'dashed' });
+        // room.visual.line(botLeft, topRight, {color: 'red', lineStyle: 'dashed'});
+    }
+}
+
 const loop = ErrorMapper.wrapLoop(() => {
     // TICK SETUP
     // SETUP LOGS
     console.log('||||||| BLUE JAY SCREEPS DASHBOARD V1 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
     console.log(`Current game tick is ${Game.time}.`);
+    RoomMapper.newRoomView(Game.spawns['Spawn1'].room);
     Commander.runTick();
     // Automatically delete memory of missing creeps
     for (const name in Memory.creeps) {

@@ -6,7 +6,6 @@ import { WithdrawEnergyTask } from "./tasks/WithdrawEnegeryTask";
 // Class that should see ALL tasks that need done, and delegate workers to them
 export class Delegator {
 
-
     // checks and returns a creeps role
     // protects against a invalid role being set
     private static roleCheck(creep: Creep): string {

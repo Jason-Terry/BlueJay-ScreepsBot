@@ -46,10 +46,12 @@ export class EmpireStats {
         HRV: 0, 
         UPG: 0, 
         WRK: 0,
+        BLD: 0,
         reset: function() {
             this.HRV = 0;
             this.UPG = 0;
             this.WRK = 0;
+            this.BLD = 0;
         }
     }
 }

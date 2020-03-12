@@ -1,6 +1,7 @@
 import { CreepBodies } from "./CreepBodies"
 import { EmpireConfig } from "Empire";
 import { EmpireStats  } from "Empire";
+import { Logger } from "utils/Logger";
 
 // Tick
 // 1. RollCall to see what the current roles of living creeps are.
@@ -36,14 +37,18 @@ export class CreepFactory {
             } else if (Memory.creeps[creep.name].role == "WRK") {
                 EmpireStats.CurrentPopulation.WRK += 1;
 
+            } else if (Memory.creeps[creep.name].role == "BLD") {
+                EmpireStats.CurrentPopulation.BLD += 1;
+
             } else {
+                Logger.warn("!!Invalid Creep Role detected in Empire Population Count!!")
                 // error
             }
         }
 
         // Is our new count, not the same as our current.
         // INFO log
-        console.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireStats.CurrentPopulation));
+        Logger.log("Population: " + JSON.stringify(EmpireStats.CurrentPopulation));
         return;
     }
 

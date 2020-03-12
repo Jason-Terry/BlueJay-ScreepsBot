@@ -2359,11 +2359,16 @@ EmpireConfig.WRK_ROLE = {
     role: "WRK",
     currTask: "WRK"
 };
+EmpireConfig.BLD_ROLE = {
+    role: "BLD",
+    currTask: "BLD"
+};
 // Configuration Objects
 EmpireConfig.PopulationLimits = {
-    HRV: 6,
-    UPG: 6,
-    WRK: 3
+    HRV: 3,
+    UPG: 3,
+    WRK: 1,
+    BLD: 1
 };
 /*
 export class RoomStructs {
@@ -2653,7 +2658,7 @@ class RoomMapper {
         }
         new RoomVisual().text(`${room.name} | ${roomOwner} | ${roomControllerLevel}`, 1, 1, { align: 'left' });
         let topLeft = new RoomPosition(controllerPos.x, controllerPos.y, room.name);
-        let botRight = new RoomPosition(controllerPos.x + 0.75, controllerPos.y + 0.75, room.name);
+        let botRight = new RoomPosition(controllerPos.x + 1, controllerPos.y + 1, room.name);
         let topRight = new RoomPosition(controllerPos.x + 1, controllerPos.y - 1, room.name);
         let botLeft = new RoomPosition(controllerPos.x - 1, controllerPos.y + 1, room.name);
         room.visual.line(topLeft, botRight, { color: 'red', lineStyle: 'dashed' });

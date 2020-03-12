@@ -20,11 +20,17 @@ export class EmpireConfig {
         currTask: "WRK"
     }
 
+    public static BLD_ROLE = {
+        role: "BLD",
+        currTask: "BLD"
+    }
+
     // Configuration Objects
     public static readonly PopulationLimits = {  
-        HRV: 6, 
-        UPG: 6, 
-        WRK: 3
+        HRV: 3, 
+        UPG: 3, 
+        WRK: 1,
+        BLD: 1
     }
 }
 

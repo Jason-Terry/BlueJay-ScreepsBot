@@ -1,10 +1,11 @@
-export class UpgradeTask {
+import { Task } from "./Task";
+
+export class UpgradeTask extends Task {
     public static run(creep: Creep) {
         let cargoTotal = _.sum(creep.carry);
         if (cargoTotal <= 0) {
             // lets get some energy
-            creep.memory.prevTask = creep.memory.currTask;
-            creep.memory.currTask = "WIT";
+            this.setTask(creep, "WIT");
         }
         else {
             // If we have energy on board

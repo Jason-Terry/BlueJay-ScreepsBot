@@ -1,5 +1,7 @@
 import { CreepFactory } from "creeps/CreepFactory";
 import { Delegator } from "Delegator";
+import { Logger } from "utils/Logger";
+import { EmpireStats } from "Empire";
 
 export class Commander {
 
@@ -8,7 +10,7 @@ export class Commander {
 
     public setAlert(i: number) {
         if (i > 0 || i > 2) {
-            console.log("INVALID ALERT LEVEL!")
+            Logger.warn("INVALID ALERT LEVEL!")
         } else {
             this.alertLevel = i
         }        
@@ -30,11 +32,44 @@ export class Commander {
             } 
             default: { 
                 this.intelLevel = "INF";
-                console.log("INVALID INTEL LEVEL!");
+                Logger.warn("INVALID INTEL LEVEL!");
                 break; 
             } 
          } 
     }
+
+    public static rollcall() {
+        // Reset the count
+        EmpireStats.CurrentPopulation.reset();
+
+        // Get new count
+        for(const i in Game.creeps) {
+
+            let creep = Game.creeps[i];
+/* TRACE LOGS
+            console.log(creep.name + " is of role...");
+            console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
+*/
+            if (Memory.creeps[creep.name].role == "HAR") {
+                EmpireStats.CurrentPopulation.HRV += 1;
+
+            } else if (Memory.creeps[creep.name].role == "UPG") {
+                EmpireStats.CurrentPopulation.UPG += 1;
+
+            } else if (Memory.creeps[creep.name].role == "WRK") {
+                EmpireStats.CurrentPopulation.WRK += 1;
+
+            } else {
+                // error
+            }
+        }
+
+        // Is our new count, not the same as our current.
+        // INFO log
+        Logger.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireStats.CurrentPopulation));
+        return;
+    }
+
 
     public static runTick() {
         // Update / Check Active Creeps
@@ -42,15 +77,15 @@ export class Commander {
         
         // Conduct Rollcall to update Empire Population
 
-
-        // Create creeps if lacking population
-        CreepFactory.rollcall();
+        // fpr each commander
+            // Create creeps if lacking population
+        this.rollcall();
         CreepFactory.create();
 
-        // Preform Tick Actions
+            // Preform Tick Actions
         Delegator.delegate();
 
-        // Handle task logic.
-
+            // Handle task logic.
+        
     }
 }

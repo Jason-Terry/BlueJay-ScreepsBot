@@ -2359,11 +2359,16 @@ EmpireConfig.WRK_ROLE = {
     role: "WRK",
     currTask: "WRK"
 };
+EmpireConfig.BLD_ROLE = {
+    role: "BLD",
+    currTask: "BLD"
+};
 // Configuration Objects
 EmpireConfig.PopulationLimits = {
     HRV: 6,
-    UPG: 6,
-    WRK: 3
+    UPG: 2,
+    WRK: 0,
+    BLD: 2,
 };
 /*
 export class RoomStructs {
@@ -2377,10 +2382,12 @@ EmpireStats.CurrentPopulation = {
     HRV: 0,
     UPG: 0,
     WRK: 0,
+    BLD: 0,
     reset: function () {
         this.HRV = 0;
         this.UPG = 0;
         this.WRK = 0;
+        this.BLD = 0;
     }
 };
 
@@ -2411,6 +2418,9 @@ class CreepFactory {
             else if (Memory.creeps[creep.name].role == "WRK") {
                 EmpireStats.CurrentPopulation.WRK += 1;
             }
+            else if (Memory.creeps[creep.name].role == "BLD") {
+                EmpireStats.CurrentPopulation.BLD += 1;
+            }
         }
         // Is our new count, not the same as our current.
         // INFO log
@@ -2440,20 +2450,36 @@ class CreepFactory {
             }
             return;
         }
-        // if (EmpireStats.CurrentPopulation.WRK < EmpireConfig.PopulationLimits.WRK ) {
-        //     console.log("Creation Check Passed: WRK")
-        //     if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE, dryRun: true }) === 0) {
-        //         Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("WRK"), { memory: EmpireConfig.WRK_ROLE });
-        //         console.log("WRK creep created!");
-        //     };
-        //     return;
-        // }
+        if (EmpireStats.CurrentPopulation.BLD < EmpireConfig.PopulationLimits.BLD) {
+            console.log("Creation Check Passed: BLD");
+            if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("BLD"), { memory: EmpireConfig.BLD_ROLE, dryRun: true }) === 0) {
+                Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("BLD"), { memory: EmpireConfig.BLD_ROLE });
+                console.log("BLD creep created!");
+            }
+            return;
+        }
     }
 }
 CreepFactory.JobList = [];
 
+class Task {
+    // sets a new task, while keeping knowldge of it's previous task.
+    static setTask(creep, taskKey) {
+        creep.memory.prevTask = creep.memory.currTask;
+        creep.memory.currTask = taskKey;
+    }
+    static prevTask(creep, taskKey) {
+        creep.memory.currTask = creep.memory.prevTask;
+        creep.memory.prevTask = "NUL";
+    }
+    static initTask(creep, taskKey) {
+        creep.memory.currTask = taskKey;
+        creep.memory.prevTask = "NUL";
+    }
+}
+
 // Class that contains creep logic for Harvesting energy from source.
-class HarvestTask {
+class HarvestTask extends Task {
     static run(creep) {
         // Task Setup
         let sources = creep.room.find(FIND_SOURCES);
@@ -2463,8 +2489,7 @@ class HarvestTask {
         if (cargoTotal == creep.carryCapacity) {
             // Let's drop off
             creep.say("ENG Full! More than 10!!!!");
-            creep.memory.prevTask = creep.memory.currTask;
-            creep.memory.currTask = "TRA";
+            this.setTask(creep, "TRA");
         }
         else {
             // Mine some energy
@@ -2476,13 +2501,12 @@ class HarvestTask {
     }
 }
 
-class UpgradeTask {
+class UpgradeTask extends Task {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
         if (cargoTotal <= 0) {
             // lets get some energy
-            creep.memory.prevTask = creep.memory.currTask;
-            creep.memory.currTask = "WIT";
+            this.setTask(creep, "WIT");
         }
         else {
             // If we have energy on board
@@ -2495,7 +2519,7 @@ class UpgradeTask {
     }
 }
 
-class TransferEnergyTask {
+class TransferEnergyTask extends Task {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
         // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
@@ -2504,8 +2528,7 @@ class TransferEnergyTask {
         if (cargoTotal == 0) {
             console.log(creep.name + " EMPTY!");
             console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
-            creep.memory.currTask = creep.memory.prevTask;
-            creep.memory.prevTask = "NUL";
+            this.prevTask(creep);
         }
         else {
             // Drop er off
@@ -2523,7 +2546,7 @@ class TransferEnergyTask {
     }
 }
 
-class WithdrawEnergyTask {
+class WithdrawEnergyTask extends Task {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
         // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
@@ -2532,8 +2555,7 @@ class WithdrawEnergyTask {
         if (cargoTotal == creep.carryCapacity) {
             console.log(creep.name + " FULL!");
             console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
-            creep.memory.currTask = creep.memory.prevTask;
-            creep.memory.prevTask = "NUL";
+            this.prevTask(creep);
         }
         else {
             // Fill er up
@@ -2551,6 +2573,78 @@ class WithdrawEnergyTask {
     }
 }
 
+class BuildTask extends Task {
+    static run(creep) {
+        // Task Setup
+        let cargoTotal = _.sum(creep.carry);
+        // If we have room to carry
+        if (cargoTotal > 0) {
+            let target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+            if (target) {
+                if (creep.build(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
+                }
+            }
+            else {
+                this.setTask(creep, "WRK");
+            }
+        }
+        else {
+            this.setTask(creep, "WIT");
+        }
+    }
+}
+
+class WorkTask extends Task {
+    static run(creep) {
+        // Task Setup
+        let cargoTotal = _.sum(creep.carry);
+        // If we have room to carry
+        if (cargoTotal > 0) {
+            let target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+            if (target) {
+                if (creep.build(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
+                }
+            }
+        }
+        else {
+            this.setTask(creep, "WIT");
+            creep.memory.prevTask = creep.memory.currTask;
+        }
+    }
+}
+
+class Logger {
+    constructor() {
+        return this;
+    }
+    // Log info level event to config targets
+    static trace(msg) {
+        console.log(`${this.TRACE_PREFIX} ${msg}`);
+    }
+    // Log info level event to config targets
+    static debug(msg) {
+        console.log(`${this.DEBUG_PREFIX} ${msg}`);
+    }
+    static warn(msg) {
+        console.log(`${this.WARN_PREFIX} ${msg}`);
+    }
+    static info(msg) {
+        console.log(`${this.INFO_PREFIX} ${msg}`);
+    }
+    static log(msg) {
+        console.log(`${this.LOG_PREFIX} ${msg}`);
+    }
+}
+// Log levels TRACE -> DEBUG -> INFO -> LOG
+// Log Types -- INTEL, WATCH, GENERAL(default)
+Logger.TRACE_PREFIX = `${Game.time} TRC:`;
+Logger.DEBUG_PREFIX = `${Game.time} DBG:`;
+Logger.WARN_PREFIX = `${Game.time} !WRN!`;
+Logger.INFO_PREFIX = `${Game.time} INF:`;
+Logger.LOG_PREFIX = `${Game.time} GEN:`;
+
 // Class that should see ALL tasks that need done, and delegate workers to them
 class Delegator {
     // checks and returns a creeps role
@@ -2562,6 +2656,8 @@ class Delegator {
             case "UPG":
                 return creep.memory.role;
             case "WRK":
+                return creep.memory.role;
+            case "BLD":
                 return creep.memory.role;
             default:
                 // will cause HAR role to be over-filled?
@@ -2587,10 +2683,16 @@ class Delegator {
                 case "TRA":
                     TransferEnergyTask.run(creep);
                     break;
+                case "BLD":
+                    Logger.debug("Running BLD Task");
+                    BuildTask.run(creep);
+                    break;
+                case "WRK":
+                    WorkTask.run(creep);
+                    break;
                 default:
-                    console.log("DELEGATOR: Invalid Task, Attempting to find task for [" + creep.name + "] ");
-                    creep.memory.currTask = this.roleCheck(creep);
-                    creep.memory.prevTask = "NUL";
+                    console.log(`DELEGATOR: Invalid Task [${creep.memory.currTask}], Attempting to find task for [${creep.name}] `);
+                    Task.initTask(creep, this.roleCheck(creep));
                     break;
             }
         }
@@ -2600,7 +2702,7 @@ class Delegator {
 class Commander {
     setAlert(i) {
         if (i > 0 || i > 2) {
-            console.log("INVALID ALERT LEVEL!");
+            Logger.warn("INVALID ALERT LEVEL!");
         }
         else {
             this.alertLevel = i;
@@ -2622,17 +2724,43 @@ class Commander {
             }
             default: {
                 this.intelLevel = "INF";
-                console.log("INVALID INTEL LEVEL!");
+                Logger.warn("INVALID INTEL LEVEL!");
                 break;
             }
         }
+    }
+    static rollcall() {
+        // Reset the count
+        EmpireStats.CurrentPopulation.reset();
+        // Get new count
+        for (const i in Game.creeps) {
+            let creep = Game.creeps[i];
+            /* TRACE LOGS
+                        console.log(creep.name + " is of role...");
+                        console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
+            */
+            if (Memory.creeps[creep.name].role == "HAR") {
+                EmpireStats.CurrentPopulation.HRV += 1;
+            }
+            else if (Memory.creeps[creep.name].role == "UPG") {
+                EmpireStats.CurrentPopulation.UPG += 1;
+            }
+            else if (Memory.creeps[creep.name].role == "WRK") {
+                EmpireStats.CurrentPopulation.WRK += 1;
+            }
+        }
+        // Is our new count, not the same as our current.
+        // INFO log
+        Logger.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireStats.CurrentPopulation));
+        return;
     }
     static runTick() {
         // Update / Check Active Creeps
         // CreepFactory.updateStatus();
         // Conduct Rollcall to update Empire Population
+        // fpr each commander
         // Create creeps if lacking population
-        CreepFactory.rollcall();
+        this.rollcall();
         CreepFactory.create();
         // Preform Tick Actions
         Delegator.delegate();
@@ -2640,33 +2768,10 @@ class Commander {
     }
 }
 
-class RoomMapper {
-    //if valid count up else reset the counter
-    static newRoomView(room) {
-        let roomOwner = "NONE";
-        let roomControllerLevel = "UNKOWN";
-        let controllerPos = new RoomPosition(1, 1, room.name);
-        if (room.controller) {
-            controllerPos = room.controller.pos;
-            roomOwner = room.controller.owner.username;
-            roomControllerLevel = room.controller.level.toString();
-        }
-        new RoomVisual().text(`${room.name} | ${roomOwner} | ${roomControllerLevel}`, 1, 1, { align: 'left' });
-        let topLeft = new RoomPosition(controllerPos.x, controllerPos.y, room.name);
-        let botRight = new RoomPosition(controllerPos.x + 0.75, controllerPos.y + 0.75, room.name);
-        let topRight = new RoomPosition(controllerPos.x + 1, controllerPos.y - 1, room.name);
-        let botLeft = new RoomPosition(controllerPos.x - 1, controllerPos.y + 1, room.name);
-        room.visual.line(topLeft, botRight, { color: 'red', lineStyle: 'dashed' });
-        // room.visual.line(botLeft, topRight, {color: 'red', lineStyle: 'dashed'});
-    }
-}
-
 const loop = ErrorMapper.wrapLoop(() => {
     // TICK SETUP
     // SETUP LOGS
-    console.log('||||||| BLUE JAY SCREEPS DASHBOARD V1 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
-    console.log(`Current game tick is ${Game.time}.`);
-    RoomMapper.newRoomView(Game.spawns['Spawn1'].room);
+    Logger.log('||||||| BLUE JAY SCREEPS DASHBOARD V1 ~~~~~~~ By Jason Terry');
     Commander.runTick();
     // Automatically delete memory of missing creeps
     for (const name in Memory.creeps) {

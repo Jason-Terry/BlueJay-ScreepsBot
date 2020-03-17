@@ -1,4 +1,6 @@
-export class WorkerTask {
+import { Task } from "./Task";
+
+export class WorkTask extends Task {
     public static run(creep: Creep) {
         // Task Setup
         let cargoTotal = _.sum(creep.carry);
@@ -9,10 +11,12 @@ export class WorkerTask {
                 if (creep.build(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
                 }
+            } else {
+                // task chain
             }
         } else {
+            this.setTask(creep, "WIT");
             creep.memory.prevTask = creep.memory.currTask;
-            creep.memory.currTask = "RFL";
         }
     }
 }

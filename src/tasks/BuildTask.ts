@@ -1,6 +1,6 @@
 import { Task } from "./Task";
 
-export class WorkerTask extends Task {
+export class BuildTask extends Task {
     public static run(creep: Creep) {
         // Task Setup
         let cargoTotal = _.sum(creep.carry);
@@ -11,9 +11,11 @@ export class WorkerTask extends Task {
                 if (creep.build(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
                 }
+            } else {
+                this.setTask(creep, "WRK");
             }
         } else {
-            this.setTask(creep, "RFL");
+            this.setTask(creep, "WIT");
         }
     }
 }

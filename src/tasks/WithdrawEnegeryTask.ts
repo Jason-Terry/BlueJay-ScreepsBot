@@ -1,4 +1,6 @@
-export class WithdrawEnergyTask {
+import { Task } from "./Task";
+
+export class WithdrawEnergyTask extends Task{
     public static run(creep: Creep) {
 
         let cargoTotal = _.sum(creep.carry);
@@ -9,8 +11,7 @@ export class WithdrawEnergyTask {
         if (cargoTotal == creep.carryCapacity) {
             console.log(creep.name + " FULL!"); 
             console.log(creep.name + " | Task Set To " + creep.memory.prevTask);          
-            creep.memory.currTask = creep.memory.prevTask;
-            creep.memory.prevTask = "NUL";
+            this.prevTask(creep);
         } else {
             // Fill er up
             let targets = creep.room.find(FIND_STRUCTURES, {

@@ -20,11 +20,17 @@ export class EmpireConfig {
         currTask: "WRK"
     }
 
+    public static BLD_ROLE = {
+        role: "BLD",
+        currTask: "BLD"
+    }
+
     // Configuration Objects
     public static readonly PopulationLimits = {  
         HRV: 6, 
-        UPG: 6, 
-        WRK: 3
+        UPG: 2, 
+        WRK: 0,
+        BLD: 2,
     }
 }
 
@@ -40,10 +46,12 @@ export class EmpireStats {
         HRV: 0, 
         UPG: 0, 
         WRK: 0,
+        BLD: 0,
         reset: function() {
             this.HRV = 0;
             this.UPG = 0;
             this.WRK = 0;
+            this.BLD = 0;
         }
     }
 }

@@ -9,5 +9,5 @@ export class CreepBodies {
     public static readonly T2_WORKER: BodyPartConstant[] = [MOVE,MOVE,WORK,WORK,CARRY,CARRY];
     
     // Guards patrol exits.
-
+    
 }

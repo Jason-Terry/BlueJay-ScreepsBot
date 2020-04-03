@@ -27,10 +27,17 @@ export class EmpireConfig {
 
     // Configuration Objects
     public static readonly PopulationLimits = {  
+<<<<<<< HEAD
         HRV: 6, 
         UPG: 2, 
         WRK: 0,
         BLD: 2,
+=======
+        HRV: 3, 
+        UPG: 3, 
+        WRK: 1,
+        BLD: 1
+>>>>>>> effc32cffe8029208710668e9445b5ab5a1dd569
     }
 }
 

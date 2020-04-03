@@ -38,15 +38,10 @@ export class CreepFactory {
                 EmpireStats.CurrentPopulation.UPG += 1;
             } else if (Memory.creeps[creep.name].role == "WRK") {
                 EmpireStats.CurrentPopulation.WRK += 1;
-<<<<<<< HEAD
-            } else if (Memory.creeps[creep.name].role == "BLD") {
-                EmpireStats.CurrentPopulation.BLD += 1;
-=======
 
             } else if (Memory.creeps[creep.name].role == "BLD") {
                 EmpireStats.CurrentPopulation.BLD += 1;
 
->>>>>>> effc32cffe8029208710668e9445b5ab5a1dd569
             } else {
                 Logger.warn("!!Invalid Creep Role detected in Empire Population Count!!")
                 // error

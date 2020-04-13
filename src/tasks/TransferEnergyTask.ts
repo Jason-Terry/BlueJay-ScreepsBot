@@ -4,13 +4,13 @@ export class TransferEnergyTask extends Task {
     public static run(creep: Creep) {
 
         let cargoTotal = _.sum(creep.carry);
-        // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
-        // console.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
+        // Logger.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
+        // Logger.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
         
         // If empty, get back to work
         if (cargoTotal == 0) {
-            console.log(creep.name + " EMPTY!"); 
-            console.log(creep.name + " | Task Set To " + creep.memory.prevTask);          
+            Logger.log(creep.name + " EMPTY!"); 
+            Logger.log(creep.name + " | Task Set To " + creep.memory.prevTask);          
             this.prevTask(creep);
         } else {
             // Drop er off

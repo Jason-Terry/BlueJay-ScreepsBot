@@ -29,8 +29,8 @@ export class CreepFactory {
 
             let creep = Game.creeps[i];
             /* TRACE LOGS
-                        console.log(creep.name + " is of role...");
-                        console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
+                        Logger.log(creep.name + " is of role...");
+                        Logger.log(JSON.stringify(Memory.creeps[creep.name].currTask));
             */
             if (Memory.creeps[creep.name].role == "HAR") {
                 EmpireStats.CurrentPopulation.HRV += 1;
@@ -57,35 +57,35 @@ export class CreepFactory {
     public static create() {
         // HRV -> UPG -> WRK
         if (Game.spawns['Spawn1'].spawning) {
-            console.log("Room Spawner is Currently working..")
+            Logger.log("Room Spawner is Currently working..")
             return;
         }
 
         // Tier Check?
 
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
-            console.log("Creation Check Passed: HAR")
+            Logger.log("Creation Check Passed: HAR")
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
                 Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE });
-                console.log("HAR creep created!");
+                Logger.log("HAR creep created!");
             };
             return;
         }
 
         if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
-            console.log("Creation Check Passed: UPG")
+            Logger.log("Creation Check Passed: UPG")
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
                 Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
-                console.log("UPG creep created!");
+                Logger.log("UPG creep created!");
             };
             return;
         };
 
         if (EmpireStats.CurrentPopulation.BLD < EmpireConfig.PopulationLimits.BLD ) {
-            console.log("Creation Check Passed: BLD")
+            Logger.log("Creation Check Passed: BLD")
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("BLD"), { memory: EmpireConfig.BLD_ROLE, dryRun: true }) === 0) {
                 Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("BLD"), { memory: EmpireConfig.BLD_ROLE });
-                console.log("BLD creep created!");
+                Logger.log("BLD creep created!");
             };
             return;
         }

@@ -14,23 +14,23 @@ export class Logger {
 
     // Log info level event to config targets
     public static trace(msg: string | undefined) : void {
-        console.log(`${this.TRACE_PREFIX} ${msg}`);
+        Logger.log(`${this.TRACE_PREFIX} ${msg}`);
     }
 
     // Log info level event to config targets
     public static debug(msg: string | undefined) : void {
-        console.log(`${this.DEBUG_PREFIX} ${msg}`);
+        Logger.log(`${this.DEBUG_PREFIX} ${msg}`);
     }
     public static warn(msg: string | undefined) : void {
-        console.log(`${this.WARN_PREFIX} ${msg}`);
+        Logger.log(`${this.WARN_PREFIX} ${msg}`);
     }
 
     public static info(msg: string | undefined) : void {
-        console.log(`${this.INFO_PREFIX} ${msg}`);
+        Logger.log(`${this.INFO_PREFIX} ${msg}`);
     }
 
     public static log(msg: string | undefined) : void {
-        console.log(`${this.LOG_PREFIX} ${msg}`);
+        Logger.log(`${this.LOG_PREFIX} ${msg}`);
     }
 
 }

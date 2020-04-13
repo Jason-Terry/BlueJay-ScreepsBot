@@ -47,8 +47,8 @@ export class Commander {
 
             let creep = Game.creeps[i];
 /* TRACE LOGS
-            console.log(creep.name + " is of role...");
-            console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
+            Logger.log(creep.name + " is of role...");
+            Logger.log(JSON.stringify(Memory.creeps[creep.name].currTask));
 */
             if (Memory.creeps[creep.name].role == "HAR") {
                 EmpireStats.CurrentPopulation.HRV += 1;

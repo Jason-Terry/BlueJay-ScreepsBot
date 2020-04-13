@@ -10,7 +10,7 @@ export class HarvestTask extends Task {
         let cargoTotal = _.sum(creep.carry);
 
         // If we have room to carry
-        // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
+        // Logger.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         if (cargoTotal == creep.carryCapacity) {
             // Let's drop off
             creep.say("ENG Full! More than 10!!!!");  

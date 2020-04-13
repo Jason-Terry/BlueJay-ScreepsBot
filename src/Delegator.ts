@@ -55,7 +55,7 @@ export class Delegator {
                     WorkTask.run(creep);
                     break;
                 default:
-                    console.log(`DELEGATOR: Invalid Task [${creep.memory.currTask}], Attempting to find task for [${creep.name}] `);
+                    Logger.log(`DELEGATOR: Invalid Task [${creep.memory.currTask}], Attempting to find task for [${creep.name}] `);
                     Task.initTask(creep, this.roleCheck(creep));
                     break;
             }

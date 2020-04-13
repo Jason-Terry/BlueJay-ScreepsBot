@@ -4,13 +4,13 @@ export class WithdrawEnergyTask extends Task{
     public static run(creep: Creep) {
 
         let cargoTotal = _.sum(creep.carry);
-        // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
-        // console.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
+        // Logger.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
+        // Logger.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
         
         // If full, get back to work
         if (cargoTotal == creep.carryCapacity) {
-            console.log(creep.name + " FULL!"); 
-            console.log(creep.name + " | Task Set To " + creep.memory.prevTask);          
+            Logger.log(creep.name + " FULL!"); 
+            Logger.log(creep.name + " | Task Set To " + creep.memory.prevTask);          
             this.prevTask(creep);
         } else {
             // Fill er up

@@ -1,11 +1,7 @@
 import { CreepBodies } from "./CreepBodies"
 import { EmpireConfig } from "Empire";
-<<<<<<< HEAD
-import { EmpireStats } from "Empire";
-=======
 import { EmpireStats  } from "Empire";
 import { Logger } from "utils/Logger";
->>>>>>> effc32cffe8029208710668e9445b5ab5a1dd569
 
 // Tick
 // 1. RollCall to see what the current roles of living creeps are.

@@ -2365,17 +2365,10 @@ EmpireConfig.BLD_ROLE = {
 };
 // Configuration Objects
 EmpireConfig.PopulationLimits = {
-<<<<<<< HEAD
-    HRV: 6,
-    UPG: 2,
-    WRK: 0,
-    BLD: 2,
-=======
     HRV: 3,
     UPG: 3,
     WRK: 1,
     BLD: 1
->>>>>>> effc32cffe8029208710668e9445b5ab5a1dd569
 };
 /*
 export class RoomStructs {
@@ -2398,6 +2391,36 @@ EmpireStats.CurrentPopulation = {
     }
 };
 
+class Logger {
+    constructor() {
+        return this;
+    }
+    // Log info level event to config targets
+    static trace(msg) {
+        console.log(`[${Game.time}] ${this.TRACE_PREFIX} ${msg}`);
+    }
+    // Log info level event to config targets
+    static debug(msg) {
+        console.log(`[${Game.time}] ${this.DEBUG_PREFIX} ${msg}`);
+    }
+    static warn(msg) {
+        console.log(`[${Game.time}] <span style='color:red'>${this.WARN_PREFIX} ${msg}</span>`);
+    }
+    static info(msg) {
+        console.log(`[${Game.time}] ${this.INFO_PREFIX} ${msg}`);
+    }
+    static log(msg) {
+        console.log(`[${Game.time}] ${this.LOG_PREFIX} ${msg}`);
+    }
+}
+// Log levels TRACE -> DEBUG -> INFO -> LOG
+// Log Types -- INTEL, WATCH, GENERAL(default)
+Logger.TRACE_PREFIX = `[:TRC:]`;
+Logger.DEBUG_PREFIX = `[:DBG:]`;
+Logger.WARN_PREFIX = `[!WRN!]`;
+Logger.INFO_PREFIX = `[:INF:]`;
+Logger.LOG_PREFIX = `[:GEN:]`;
+
 // Tick
 // 1. RollCall to see what the current roles of living creeps are.
 // 2. 
@@ -2413,8 +2436,8 @@ class CreepFactory {
         for (const i in Game.creeps) {
             let creep = Game.creeps[i];
             /* TRACE LOGS
-                        console.log(creep.name + " is of role...");
-                        console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
+                        Logger.log(creep.name + " is of role...");
+                        Logger.log(JSON.stringify(Memory.creeps[creep.name].currTask));
             */
             if (Memory.creeps[creep.name].role == "HAR") {
                 EmpireStats.CurrentPopulation.HRV += 1;
@@ -2428,40 +2451,44 @@ class CreepFactory {
             else if (Memory.creeps[creep.name].role == "BLD") {
                 EmpireStats.CurrentPopulation.BLD += 1;
             }
+            else {
+                Logger.warn("!!Invalid Creep Role detected in Empire Population Count!!");
+                // error
+            }
         }
         // Is our new count, not the same as our current.
         // INFO log
-        console.log("ROLL CALL RESULTS: " + JSON.stringify(EmpireStats.CurrentPopulation));
+        Logger.log("Population: " + JSON.stringify(EmpireStats.CurrentPopulation));
         return;
     }
     static create() {
         // HRV -> UPG -> WRK
         if (Game.spawns['Spawn1'].spawning) {
-            console.log("Room Spawner is Currently working..");
+            Logger.log("Room Spawner is Currently working..");
             return;
         }
         // Tier Check?
         if (EmpireStats.CurrentPopulation.HRV < EmpireConfig.PopulationLimits.HRV) {
-            console.log("Creation Check Passed: HAR");
+            Logger.log("Creation Check Passed: HAR");
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE, dryRun: true }) === 0) {
                 Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("HAR"), { memory: EmpireConfig.HRV_ROLE });
-                console.log("HAR creep created!");
+                Logger.log("HAR creep created!");
             }
             return;
         }
         if (EmpireStats.CurrentPopulation.UPG < EmpireConfig.PopulationLimits.UPG) {
-            console.log("Creation Check Passed: UPG");
+            Logger.log("Creation Check Passed: UPG");
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE, dryRun: true }) === 0) {
                 Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("UPG"), { memory: EmpireConfig.UPG_ROLE });
-                console.log("UPG creep created!");
+                Logger.log("UPG creep created!");
             }
             return;
         }
         if (EmpireStats.CurrentPopulation.BLD < EmpireConfig.PopulationLimits.BLD) {
-            console.log("Creation Check Passed: BLD");
+            Logger.log("Creation Check Passed: BLD");
             if (Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("BLD"), { memory: EmpireConfig.BLD_ROLE, dryRun: true }) === 0) {
                 Game.spawns['Spawn1'].spawnCreep(CreepBodies.T1_WORKER, this.nameCreep("BLD"), { memory: EmpireConfig.BLD_ROLE });
-                console.log("BLD creep created!");
+                Logger.log("BLD creep created!");
             }
             return;
         }
@@ -2492,7 +2519,7 @@ class HarvestTask extends Task {
         let sources = creep.room.find(FIND_SOURCES);
         let cargoTotal = _.sum(creep.carry);
         // If we have room to carry
-        // console.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
+        // Logger.log(creep.name + " is carrying " + cargoTotal + " of " + creep.carryCapacity);
         if (cargoTotal == creep.carryCapacity) {
             // Let's drop off
             creep.say("ENG Full! More than 10!!!!");
@@ -2529,12 +2556,12 @@ class UpgradeTask extends Task {
 class TransferEnergyTask extends Task {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
-        // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
-        // console.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
+        // Logger.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
+        // Logger.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
         // If empty, get back to work
         if (cargoTotal == 0) {
-            console.log(creep.name + " EMPTY!");
-            console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
+            Logger.log(creep.name + " EMPTY!");
+            Logger.log(creep.name + " | Task Set To " + creep.memory.prevTask);
             this.prevTask(creep);
         }
         else {
@@ -2556,12 +2583,12 @@ class TransferEnergyTask extends Task {
 class WithdrawEnergyTask extends Task {
     static run(creep) {
         let cargoTotal = _.sum(creep.carry);
-        // console.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
-        // console.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
+        // Logger.log(creep.name + " | Capacity: " + cargoTotal + " OF " + creep.carryCapacity); 
+        // Logger.log(creep.name + " | Task Set To " + creep.memory.prevTask);      
         // If full, get back to work
         if (cargoTotal == creep.carryCapacity) {
-            console.log(creep.name + " FULL!");
-            console.log(creep.name + " | Task Set To " + creep.memory.prevTask);
+            Logger.log(creep.name + " FULL!");
+            Logger.log(creep.name + " | Task Set To " + creep.memory.prevTask);
             this.prevTask(creep);
         }
         else {
@@ -2622,36 +2649,6 @@ class WorkTask extends Task {
     }
 }
 
-class Logger {
-    constructor() {
-        return this;
-    }
-    // Log info level event to config targets
-    static trace(msg) {
-        console.log(`${this.TRACE_PREFIX} ${msg}`);
-    }
-    // Log info level event to config targets
-    static debug(msg) {
-        console.log(`${this.DEBUG_PREFIX} ${msg}`);
-    }
-    static warn(msg) {
-        console.log(`${this.WARN_PREFIX} ${msg}`);
-    }
-    static info(msg) {
-        console.log(`${this.INFO_PREFIX} ${msg}`);
-    }
-    static log(msg) {
-        console.log(`${this.LOG_PREFIX} ${msg}`);
-    }
-}
-// Log levels TRACE -> DEBUG -> INFO -> LOG
-// Log Types -- INTEL, WATCH, GENERAL(default)
-Logger.TRACE_PREFIX = `${Game.time} TRC:`;
-Logger.DEBUG_PREFIX = `${Game.time} DBG:`;
-Logger.WARN_PREFIX = `${Game.time} !WRN!`;
-Logger.INFO_PREFIX = `${Game.time} INF:`;
-Logger.LOG_PREFIX = `${Game.time} GEN:`;
-
 // Class that should see ALL tasks that need done, and delegate workers to them
 class Delegator {
     // checks and returns a creeps role
@@ -2698,7 +2695,7 @@ class Delegator {
                     WorkTask.run(creep);
                     break;
                 default:
-                    console.log(`DELEGATOR: Invalid Task [${creep.memory.currTask}], Attempting to find task for [${creep.name}] `);
+                    Logger.log(`DELEGATOR: Invalid Task [${creep.memory.currTask}], Attempting to find task for [${creep.name}] `);
                     Task.initTask(creep, this.roleCheck(creep));
                     break;
             }
@@ -2743,8 +2740,8 @@ class Commander {
         for (const i in Game.creeps) {
             let creep = Game.creeps[i];
             /* TRACE LOGS
-                        console.log(creep.name + " is of role...");
-                        console.log(JSON.stringify(Memory.creeps[creep.name].currTask));
+                        Logger.log(creep.name + " is of role...");
+                        Logger.log(JSON.stringify(Memory.creeps[creep.name].currTask));
             */
             if (Memory.creeps[creep.name].role == "HAR") {
                 EmpireStats.CurrentPopulation.HRV += 1;
@@ -2775,30 +2772,6 @@ class Commander {
     }
 }
 
-<<<<<<< HEAD
-=======
-class RoomMapper {
-    //if valid count up else reset the counter
-    static newRoomView(room) {
-        let roomOwner = "NONE";
-        let roomControllerLevel = "UNKOWN";
-        let controllerPos = new RoomPosition(1, 1, room.name);
-        if (room.controller) {
-            controllerPos = room.controller.pos;
-            roomOwner = room.controller.owner.username;
-            roomControllerLevel = room.controller.level.toString();
-        }
-        new RoomVisual().text(`${room.name} | ${roomOwner} | ${roomControllerLevel}`, 1, 1, { align: 'left' });
-        let topLeft = new RoomPosition(controllerPos.x, controllerPos.y, room.name);
-        let botRight = new RoomPosition(controllerPos.x + 1, controllerPos.y + 1, room.name);
-        let topRight = new RoomPosition(controllerPos.x + 1, controllerPos.y - 1, room.name);
-        let botLeft = new RoomPosition(controllerPos.x - 1, controllerPos.y + 1, room.name);
-        room.visual.line(topLeft, botRight, { color: 'red', lineStyle: 'dashed' });
-        // room.visual.line(botLeft, topRight, {color: 'red', lineStyle: 'dashed'});
-    }
-}
-
->>>>>>> effc32cffe8029208710668e9445b5ab5a1dd569
 const loop = ErrorMapper.wrapLoop(() => {
     // TICK SETUP
     // SETUP LOGS
